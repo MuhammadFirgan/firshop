@@ -19,11 +19,12 @@ export default function SidebarContent({ type = "content" }: BarTypeProps) {
                             {navigation.map((item) => (
                             <li key={item.name}>
                                 <Button
-                                variant="ghost"
+                               
                                 className={cn(
                                     "w-full justify-start gap-x-3 rounded-xl p-3 text-sm font-medium transition-all duration-200",
                                     item.current
                                     ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border border-blue-200/50'
+                               
                                     : 'text-gray-700 hover:text-blue-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50'
                                 )}
                                 >
