@@ -4,31 +4,50 @@ import {
     SheetContent,
     SheetTrigger,
 } from "@/components/ui/sheet"
-import { bebas_neue } from "@/constans"
-import Link from "next/link"
+
+import { Button } from "../ui/button"
+import { Heart, Menu, Package, Search, Settings, User } from "lucide-react"
+import { Input } from "../ui/input"
+import BioProfile from "../molecules/BioProfile"
+import LogoutButton from "../molecules/LogoutButton"
   
 export default function MobileNav() {
   return (
     <Sheet>
-        <SheetTrigger asChild>
-            <button className="block text-stone-800 hover:text-stone-600 focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
-        </SheetTrigger>
-        <SheetContent side="left">
-            <Link href="/" className="text-stone-800 font-bold text-xl b-8">
-                <h1 className={`text-4xl ${bebas_neue.className}`}>FirShop</h1>
-            </Link>
-            
-            <Link href="/sign-in">
-              <span className="text-stone-800 hover:text-stone-600 px-4 border-r border-stone-300 ">Login</span>
-            </Link>
-            <Link href="/sign-up">
-              <span className="text-stone-800 hover:text-stone-600 px-4 ">Register</span>
-            </Link>
-        </SheetContent>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="sm" className="md:hidden hover:bg-orange-50 hover:text-orange-600">
+          <Menu className="h-4 w-4" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-80 bg-white/95 backdrop-blur-md">
+        <div className="flex flex-col px-6 space-y-6 mt-12">
+  
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Search products..."
+              className="pl-10 border-gray-200 focus:border-orange-400 focus:ring-orange-400/20"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          </div>
+
+          
+          <div className="pt-6 border-t border-gray-200">
+            <BioProfile type="mobile" />
+            <div className="space-y-2">
+              <Button variant="ghost" className="w-full justify-start hover:bg-orange-50 hover:text-orange-600">
+                <Package className="mr-2 h-4 w-4" />
+                Orders
+              </Button>
+              <Button variant="ghost" className="w-full justify-start hover:bg-pink-50 hover:text-pink-600">
+                <Heart className="mr-2 h-4 w-4" />
+                Wishlist
+              </Button>
+              <LogoutButton />
+            </div>
+          </div>
+        </div>
+      </SheetContent>
     </Sheet>
   )
 }

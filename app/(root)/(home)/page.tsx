@@ -6,7 +6,6 @@ import SkeletonCard from '@/components/SkeletonCard';
 import { bebas_neue, categories, products } from '@/constans';
 
 import Image from 'next/image';
-import { BiHeadphone, BiMoneyWithdraw, BiSolidWallet } from "react-icons/bi";
 import { Filter, Search } from 'lucide-react'
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -50,9 +49,9 @@ export default function Home() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 hover-lift">
+                <Button asChild className="bg-gradient-to-r from-orange-600 to-red-600 !text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 hover-lift">
                   <Link href="">Shop Now</Link>
-                  {/* <ArrowRight size={20} /> */}
+                 
                 </Button>
                 
                 <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-semibold hover:border-orange-600 hover:text-orange-600 transition-all duration-300 hover-lift">
@@ -119,7 +118,7 @@ export default function Home() {
 
           <ProductsGrid limit={4}/>
           <div className="flex justify-center my-8">
-            <Button asChild className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 hover-lift">
+            <Button asChild className="bg-gradient-to-r from-orange-600 to-red-600 !text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 hover-lift">
               <Link href="">View All</Link>
 
             </Button>
@@ -144,7 +143,7 @@ export default function Home() {
 
           <ProductsGrid limit={8}/>
           <div className="flex justify-center my-8">
-            <Button asChild className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 hover-lift">
+            <Button asChild className="bg-gradient-to-r from-orange-600 to-red-600 !text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 hover-lift">
               <Link href="">View All</Link>
 
             </Button>

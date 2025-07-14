@@ -8,7 +8,6 @@ export default function Filter() {
     
     return (
         <div>
-            
             <div className="my-8">
                 <div className="flex gap-4 my-6 lg:flex-col">
                     <h1 className="font-semibold">Sort By</h1>

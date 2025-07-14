@@ -8,9 +8,9 @@ export default function ProductsGrid({ limit }: { limit: number }) {
     const [selectedCategory, setSelectedCategory] = useState('All')
     const [searchTerm, setSearchTerm] = useState('')
     const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesCategory && matchesSearch
+        const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        return matchesCategory && matchesSearch
     })
   return (
     <div className="w-full">
