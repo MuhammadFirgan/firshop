@@ -7,15 +7,10 @@ export default function page() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Elements */}
-      {/* <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-      <div className="absolute top-20 left-20 w-72 h-72 bg-orange-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-      <div className="absolute bottom-20 right-20 w-72 h-72 bg-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-       */}
-      {/* Main Container */}
+      
       <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
         
-        {/* Left Side - Branding & Info */}
+        
         <div className="hidden lg:block space-y-8 p-8">
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
@@ -31,12 +26,7 @@ export default function page() {
             </div>
             
             <div className="space-y-4">
-              {/* <h2 className="text-4xl font-bold text-gray-900 leading-tight">
-                Welcome to the Future of
-                <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent block">
-                  Web Development
-                </span>
-              </h2> */}
+              
               <h2 className="text-4xl font-bold text-gray-900 ">
                 Where <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Trends</span> Meet You.
               </h2>
@@ -96,25 +86,6 @@ export default function page() {
                 </p>
               </div>
             </div>
-
-            {/* <div className="flex bg-gray-100 rounded-2xl p-1">
-              <button
-                
-                className="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 bg-white text-gray-900 shadow-s"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => setIsLogin(false)}
-                className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-300 ${
-                  !isLogin
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Sign Up
-              </button>
-            </div> */}
 
             <GoogleLogin />
 

@@ -1,12 +1,6 @@
 @import "tailwindcss";
 
-.bg-primary {
-    @apply bg-blue-600 text-white
-}
 
-.text-primary {
-    @apply text-blue-600
-}
 
 @layer utilities {
     .gradient-text {
@@ -78,8 +72,3 @@
 
 
 
-@layer base {
-  * {
-    @apply border-border;}
-  body {
-    @apply bg-background text-foreground;}}

@@ -116,3 +116,4 @@ export const products= [
   ]
 
 export const categories = ['All', 'Audio', 'Wearable', 'Gaming', 'Accessories', 'Camera', 'Smart Home']
+

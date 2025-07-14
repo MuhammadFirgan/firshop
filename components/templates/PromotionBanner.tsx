@@ -37,9 +37,9 @@ export default function PromotionBanner() {
             <Countdown />
             
             <div className="flex gap-4 animate-fade-in-up delay-500">
-              <Button asChild className="group relative bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 border border-orange-500/20">
+              <Button asChild className="group relative bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 !text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 border border-orange-500/20">
                 <Link href="/shop">
-                  <span className="relative z-10">Buy Now</span>
+                  <span className="relative z-10 ">Buy Now</span>
                   <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>

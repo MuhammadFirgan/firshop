@@ -8,7 +8,7 @@ export default function layout({ children } : {children: React.ReactNode}) {
     <main className="relative">
       <Navbar />
       <div className="flex">
-        <div className='hidden lg:block'>
+        <div className='hidden lg:block md:pt-14'>
           <Sidebar />
         </div>
         <section className='flex min-h-screen max-md:pb-14 '>
