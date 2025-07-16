@@ -8,8 +8,8 @@ import {
 import { Button } from "../ui/button"
 import { Heart, Menu, Package, Search, Settings, User } from "lucide-react"
 import { Input } from "../ui/input"
-import BioProfile from "../molecules/BioProfile"
-import LogoutButton from "../molecules/LogoutButton"
+import BioProfile from "./BioProfile"
+import LogoutButton from "./LogoutButton"
   
 export default function MobileNav() {
   return (

@@ -1,6 +1,6 @@
-import Footer from '@/components/organism/Footer'
-import Navbar from '@/components/organism/Navbar'
-import Sidebar from '@/components/organism/Sidebar'
+import Footer from '@/components/shared/Footer'
+import Navbar from '@/components/shared/Navbar'
+import Sidebar from '@/components/shared/Sidebar'
 
 
 export default function layout({ children } : {children: React.ReactNode}) {

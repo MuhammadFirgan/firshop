@@ -1,6 +1,6 @@
-import Metrics from '@/components/molecules/Metrics';
-import RecentOrder from '@/components/molecules/RecentOrder';
-import TopProducts from '@/components/molecules/TopProducts';
+import Metrics from '@/components/shared/Metrics';
+import RecentOrder from '@/components/shared/RecentOrder';
+import TopProducts from '@/components/shared/TopProducts';
 
 export default function page() {
 

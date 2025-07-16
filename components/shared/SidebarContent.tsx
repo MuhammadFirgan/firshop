@@ -1,5 +1,5 @@
 import { Store } from "lucide-react";
-import { navigation } from "../organism/Sidebar";
+import { navigation } from "./Sidebar";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import Filter from "../Filter";

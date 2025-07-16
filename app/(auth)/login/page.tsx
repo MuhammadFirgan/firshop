@@ -1,5 +1,5 @@
 
-import GoogleLogin from '@/components/molecules/GoogleLogin';
+import GoogleLogin from '@/components/shared/GoogleLogin';
 import { Eye, EyeOff, User, Mail, Lock, Chrome, Github, Linkedin, Code, Briefcase, Zap, TrendingUp, Users, Globe } from 'lucide-react'
 import Image from 'next/image';
 

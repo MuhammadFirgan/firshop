@@ -13,12 +13,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import MobileNav from './MobileNav';
-import BioProfile from '../molecules/BioProfile';
-import LogoutButton from '../molecules/LogoutButton';
+import BioProfile from './BioProfile';
 import Link from 'next/link';
 
-import InputSearch from '../molecules/InputSearch';
-import { BarTypeProps } from '../atoms/SidebarContent';
+import InputSearch from './InputSearch';
+import { BarTypeProps } from './SidebarContent';
+import LogoutButton from './LogoutButton';
 
 
 const Navbar = ({type}: BarTypeProps) => {
