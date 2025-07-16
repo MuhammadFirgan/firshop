@@ -27,9 +27,9 @@ export default function LogoutButton() {
   }, [])
 
   return (
-    <DropdownMenuItem onClick={handleLogout} className="hover:bg-red-50 hover:text-red-600 transition-colors flex items-center">
+    <Button onClick={handleLogout}  className="hover:bg-red-50 hover:text-red-600 transition-colors flex items-center">
       <LogOut className="mr-2 h-4 w-4 md:mr-0" />
       <span>Logout</span>
-    </DropdownMenuItem>
+    </Button>
   )
 }
