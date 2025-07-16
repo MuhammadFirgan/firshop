@@ -9,12 +9,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import { Edit, Trash } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 
 export default function page() {
   return (
-    <section className="p-7 md:pl-20 md:pr-16">
+    <section className="p-7 h-screen md:pl-20 md:pr-16 md:-mt-32 ">
       <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
         <div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -22,47 +32,468 @@ export default function page() {
           </h1>
           <p className="text-slate-600 mt-1">Here’s What We Offer: A Closer Look at Our Products</p>
         </div> 
-        <Button asChild className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 ">
-          <Link href="/dashboard/product/create" className="text-white">Create New Product</Link>
+        <Button asChild className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 !text-white">
+          <Link href="/dashboard/product/create">Create New Product</Link>
         </Button> 
       </div>
+      <div className="flex pt-4 gap-3">
+        <div className="w-full">
+          <Input 
+            placeholder="Search product..."
+            className="border-gray-200"
+          />
+        </div>
+        <div>
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="light">Light</SelectItem>
+              <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="system">System</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
-      <div className="flex w-full items-center md:gap-12 overflow-x-auto py-8 gap-4">
-        <div className="size-20">
-          <Image src="/img/headset.jpg" width={200} height={200} alt="product" className="w-full aspect-square rounded-xl"/>
-        </div>
-        <div className="flex flex-col md:w-1/2">
-          <h1 className="line-clamp-1">Headset Pro Gaming</h1>
-          <span className="text-xs text-gray-500">Gaming</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="">Rp. 200000</span>
-          <span className="text-xs text-gray-500">120 stocks</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="">Rp. 200000</span>
-          <span className="text-xs text-gray-500">120 stocks</span>
-        </div>
-        {/* <Table>
+      <div className="border h-screen overflow-y-auto scrollbar-hide border-gray-200 rounded-lg mt-14">
+        <Table >
           <TableCaption>A list of your recent invoices.</TableCaption>
           <TableHeader>
-            <TableRow className="border-none bg-gradient-to-r from-blue-100 to-purple-100">
-              <TableHead className="w-[100px]">Invoice</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead className="text-right">Action</TableHead>
+            <TableRow className="bg-blue-50 border-gray-200">
+              <TableHead className="text-gray-700 font-semibold">Product</TableHead>
+              <TableHead className="text-gray-700 font-semibold">Category</TableHead>
+              <TableHead className="text-gray-700 font-semibold">Price</TableHead>
+              <TableHead className="text-gray-700 font-semibold">Stock</TableHead>
+              <TableHead className="text-gray-700 font-semibold">Status</TableHead>
+              <TableHead className="text-gray-700 font-semibold">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell className="font-medium">INV001</TableCell>
-              <TableCell className="line-clamp-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ea totam fuga accusamus tenetur rerum placeat voluptate voluptatibus explicabo fugit dolor?</TableCell>
-              <TableCell>Credit Card</TableCell>
-              <TableCell className="text-right">$250.00</TableCell>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 px-4 py-2 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
             </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">
+                <div className="flex items-center gap-4 p-4 w-[300px]">
+                  <Image src="/img/headset.jpg" width={24} height={24} alt="product" className="size-12"/>
+                  <div className="flex flex-col w-full">
+                    <h1 className="line-clamp-1">Headset Gaming 5</h1>
+                    <p className="line-clamp-1 text-xs text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores nulla beatae reiciendis, quas asperiores obcaecati quisquam deserunt? Cumque dolor culpa perspiciatis exercitationem, tenetur nulla!</p>
+                  </div>
+                </div>
+
+              </TableCell>
+              <TableCell>
+                <Badge className="text-blue-700 bg-blue-100 font-semibold">Gaming</Badge>
+              </TableCell>
+              <TableCell>$250.00</TableCell>
+              <TableCell>45</TableCell>
+              <TableCell>
+                <Badge className="text-green-700 bg-green-100 font-semibold">Active</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  <Button variant="ghost">
+                    <Edit className="size-4" />
+                  </Button>
+                  <Button variant="ghost">
+                    <Trash className="size-4"/>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            
           </TableBody>
-        </Table> */}
+        </Table>
       </div>
 
     </section>

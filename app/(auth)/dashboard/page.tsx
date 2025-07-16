@@ -6,7 +6,7 @@ export default function page() {
 
     
   return (
-    <div className="p-6 space-y-6 ">
+    <div className="p-6 space-y-6 bg-gradient-to-br from-slate-50 via-white to-blue-50">
 
       <div className="flex items-center justify-between">
         <div>
