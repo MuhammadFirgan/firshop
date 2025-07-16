@@ -37,7 +37,7 @@ const metrics = [
 
 export default function Metrics() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((metric, index) => (
           <div key={metric.title} className="metric-card animate-float" style={{ animationDelay: `${index * 200}ms` }}>
             <div className="flex items-center gap-4">

@@ -41,7 +41,7 @@ const Navbar = ({type}: BarTypeProps) => {
   return (
     <>
       {type === "dashboard" ? (
-        <header className="fixed top-0 left-64 right-0 h-16 bg-white/70 backdrop-blur-sm border-b border-white/20 px-6 flex items-center justify-between z-[99999]">
+        <header className="fixed top-0 left-64 right-0 h-16 bg-white/70 backdrop-blur-sm border-b border-white/20 px-6 items-center justify-between z-[99999] hidden md:flex">
           <div className="flex items-center flex-1 max-w-xl">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
@@ -63,6 +63,7 @@ const Navbar = ({type}: BarTypeProps) => {
               <Settings className="w-5 h-5" />
             </Button>
           </div>
+          <MobileNav />
         </header>
       ) : (
 
@@ -101,7 +102,7 @@ const Navbar = ({type}: BarTypeProps) => {
                     </Badge>
                   )}
                 </Button>
-
+                
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="hover:bg-red-50 hover:text-red-600 transition-all duration-200 hover:scale-105 hidden md:block">
@@ -109,9 +110,9 @@ const Navbar = ({type}: BarTypeProps) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white/95 backdrop-blur-md border border-gray-200/50">
-                    <BioProfile />
                     <DropdownMenuSeparator />
                       <DropdownMenuItem className="hover:bg-orange-50 hover:text-orange-600 transition-colors py-2">
+                        {/* <BioProfile /> */}
                         <Link href="" className='flex'>
                   
                           <User className="mr-2 h-4 w-4" />
@@ -126,9 +127,9 @@ const Navbar = ({type}: BarTypeProps) => {
                     </DropdownMenuItem>
                     
                     <DropdownMenuSeparator />
-                    <LogoutButton />
-                      {/* <DropdownMenuItem >
-                      </DropdownMenuItem> */}
+                      <DropdownMenuItem >
+                        <LogoutButton />
+                      </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
