@@ -5,7 +5,7 @@ import { BarChart3, Bell, Home, Menu, Package, Settings, ShoppingCart, Users } f
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
-import SidebarContent, { BarTypeProps } from '../atoms/SidebarContent';
+import SidebarContent, { BarTypeProps } from './SidebarContent';
 
 
 

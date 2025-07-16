@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import Countdown from "../organism/Countdown";
+import Countdown from "../shared/Countdown";
 
 
 export default function PromotionBanner() {

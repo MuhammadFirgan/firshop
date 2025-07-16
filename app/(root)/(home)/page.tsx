@@ -4,12 +4,11 @@ import { Product } from '@/components/Card';
 import Features from '@/components/Features';
 import SkeletonCard from '@/components/SkeletonCard';
 import { bebas_neue, categories, products } from '@/constans';
-
 import Image from 'next/image';
 import { Filter, Search } from 'lucide-react'
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import ProductsGrid from '@/components/organism/ProductsGrid';
+import ProductsGrid from '@/components/shared/ProductsGrid';
 import PromotionBanner from '@/components/templates/PromotionBanner';
 import NewArrival from '@/components/templates/NewArrival';
 
