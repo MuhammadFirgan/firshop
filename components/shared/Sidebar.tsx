@@ -25,8 +25,8 @@ export default function Sidebar({type} : BarTypeProps) {
     <>
       
       <Sheet>
-        <SheetTrigger asChild className="lg:hidden">
-          <Button variant="ghost" size="icon" className="lg:hidden">
+        <SheetTrigger asChild className="lg:hidden block">
+          <Button variant="ghost" size="icon" className="lg:hidden block">
             <Menu className="h-6 w-6" />
           </Button>
         </SheetTrigger>
