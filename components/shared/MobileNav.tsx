@@ -18,8 +18,10 @@ import { Input } from "../ui/input"
 import BioProfile from "./BioProfile"
 import LogoutButton from "./LogoutButton"
 import Link from "next/link";
+import { BarTypeProps } from "./SidebarContent";
+import { navigation } from "./Sidebar";
   
-export default function MobileNav() {
+export default function MobileNav({type}: BarTypeProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -28,6 +30,19 @@ export default function MobileNav() {
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-80 bg-white/95 backdrop-blur-md">
+        {type === "dashboard" ? (
+          <ul className="flex flex-col gap-4 pt-10">
+            {navigation.map((item) => (
+              <li key={item.name} className="px-4 py-2">
+                <Link href={item.href} className="flex gap-3">
+                  <item.icon />
+                  {item.name}
+                </Link>
+
+              </li>
+            ))}
+          </ul>
+        ) : (
         <div className="flex flex-col px-6 space-y-6 mt-12">
   
           <div className="relative">
@@ -83,6 +98,7 @@ export default function MobileNav() {
             </div>
           </div>
         </div>
+        )}
       </SheetContent>
     </Sheet>
   )

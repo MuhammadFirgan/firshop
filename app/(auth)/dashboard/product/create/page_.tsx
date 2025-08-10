@@ -128,10 +128,10 @@ export default function ProductForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 w-full">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 w-full -mt-24">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-blue-100 sticky top-0 z-10">
-        <div className=" px-6 py-4">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-blue-100 sticky top-0 z-10 ">
+        <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">

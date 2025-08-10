@@ -41,7 +41,7 @@ const Navbar = ({type}: BarTypeProps) => {
   return (
     <>
       {type === "dashboard" ? (
-        <header className="fixed top-0 left-64 right-0 h-16 bg-white/70 backdrop-blur-sm border-b border-white/20 px-6 items-center justify-between z-[99999] hidden md:flex">
+        <header className="fixed top-0 left-0 md:left-64 right-0 h-16 bg-white/70 backdrop-blur-sm border-b border-white/20 px-6 items-center justify-between md:z-[99999] flex">
           <div className="flex items-center flex-1 max-w-xl">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
@@ -63,7 +63,7 @@ const Navbar = ({type}: BarTypeProps) => {
               <Settings className="w-5 h-5" />
             </Button>
           </div>
-          <MobileNav />
+          <MobileNav type='dashboard'/>
         </header>
       ) : (
 
