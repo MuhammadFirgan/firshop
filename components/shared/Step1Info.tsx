@@ -1,4 +1,4 @@
-import { StepProps } from "@/constans";
+import { categories, StepProps } from "@/constans";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -21,10 +21,11 @@ export default function Step1Info({ formData, onInputChange, onSelectChange }: S
                 <SelectTrigger className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 w-full">
                 <SelectValue placeholder="Theme" />
                 </SelectTrigger>
-                <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
+                <SelectContent className="bg-white">
+                    {categories.map((category) => (
+                        <SelectItem key={category} value={category}>{category}</SelectItem>
+                    ))}
+                  
                 </SelectContent>
             </Select>
         </div>
