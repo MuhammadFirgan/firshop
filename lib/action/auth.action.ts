@@ -1,27 +1,22 @@
 'use server'
 
 import { redirect } from "next/navigation"
-import { createClient } from "../supabase/server"
 import { parseStringify } from "../utils"
+import { createServer } from "../supabase/server"
 
 
 
 export async function loginWithOAuth() {
-    const supabase = await createClient()
+    const supabase = await createServer()
     
     const user = await supabase.auth.getUser()
 
     return parseStringify(user)
 }
 
-export async function loginWIthEmail() {
-    const supabase = await createClient()
-
-    
-}
 
 export async function userLogout() {
-    const supabase = await createClient()
+    const supabase = await createServer()
 
     const logout = await supabase.auth.signOut()
 
