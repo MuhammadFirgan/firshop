@@ -1,4 +1,6 @@
+import { formSchema } from "@/lib/validation";
 import { Poppins, Bebas_Neue } from "next/font/google";
+import { z } from "zod";
 
 
 export const poppins = Poppins({ 
@@ -141,7 +143,8 @@ export interface ProductFormData extends Step1Data, Step2Data, Step3Data, Step4D
 // Definisikan props untuk setiap komponen langkah
 export interface StepProps {
   formData: ProductFormData;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onSelectChange?: (value: string) => void;
-  onImageChange?: (images: File[]) => void;
+  errors: z.inferFlattenedErrors<typeof formSchema>['fieldErrors'];
+  // onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  // onSelectChange?: (value: string) => void;
+  // onImageChange?: (images: File[]) => void;
 }
