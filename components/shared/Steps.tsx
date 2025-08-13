@@ -11,19 +11,35 @@ import { useState } from "react";
 import Step1Info from "./Step1Info";
 import Step2Desc from "./Step2Desc";
 import Step3Price from "./Step3Price";
+import { useFormState } from "react-dom";
+import { createProduct } from "@/lib/action/product.action";
+import { z } from "zod";
 
 
 export default function Steps() {
+  
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    productName: '',
-    category: '',
-    description: '',
-    price: 0,
-    stock: 0,
-    images: []
-  });
+  // const [formData, setFormData] = useState({
+  //   productName: '',
+  //   category: '',
+  //   description: '',
+  //   price: 0,
+  //   stock: 0,
+  //   images: []
+  // });
+  const [state, formAction] = useFormState(createProduct, {
+    status: 'idle',
+    data: {
+      productName: '',
+      category: '',
+      description: '',
+      price: 0,
+      stock: 0,
+      thumbnail: [] as File[]
+    }
+  })
 
+  
   const nextStep = () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
@@ -36,20 +52,20 @@ export default function Steps() {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [id]: value
-    }));
-  };
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  //   const { id, value } = e.target;
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [id]: value
+  //   }));
+  // };
 
-  const handleImageChange = (newImages: File[]) => {
-    setFormData(prev => ({
-      ...prev,
-      images: newImages
-    }));
-  };
+  // const handleImageChange = (newImages: File[]) => {
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     images: newImages
+  //   }));
+  // };
   return (
     <div className="max-w-sm overflow-x-auto md:max-w-full">
       <ProgressStep
@@ -66,32 +82,35 @@ export default function Steps() {
           {currentStep === 4 && "Upload product images to showcase your item"}
         </div>
       </div>
-      <div className="flex w-full gap-4 flex-col md:flex-row mt-7">
+      <form action={formAction} className="flex w-full gap-4 flex-col md:flex-row mt-7">
         {currentStep === 1 && (
           <Step1Info 
-            formData={formData}
-            onInputChange={handleInputChange}
-            onSelectChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+            formData={state.data}
+            errors={state?.errors}
+            
           />
         )}
         {currentStep === 2 && (
           <Step2Desc 
-            formData={formData}
-            onInputChange={handleInputChange}
+            formData={state.data}
+            errors={state?.errors}
+            
           />
         )}
         {currentStep === 3 && (
           <Step3Price 
-            formData={formData}
-            onInputChange={handleInputChange}
+            formData={state.data}
+            errors={state?.errors}
+            
           />
         )}
         {currentStep === 4 && (
           <Step4Images 
-            formData={formData}
-            onImageChange={handleImageChange}
+            formData={state.data}
+            errors={state?.errors}
           />
         )}
+        
         {/* <div className="flex flex-col gap-4 w-full md:flex-row ">
           <div className="flex flex-col gap-3">
             <Label htmlFor="productName" className="text-slate-600">Product Name</Label>
@@ -147,7 +166,7 @@ export default function Steps() {
             <Step4Images />
           </div>
         </div> */}
-      </div>
+      </form>
       <div className="flex justify-between items-center p-8 text-white">
         <Button 
           variant="outline" 
@@ -168,6 +187,7 @@ export default function Steps() {
           ) : (
             <Button 
               onClick={nextStep}
+              
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
             >
               <span className="text-white">Next Step</span>
