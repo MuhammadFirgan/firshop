@@ -1,25 +1,55 @@
 'use server'
 import { createProductProps } from "@/types";
 import { createServer } from "../supabase/server";
+import { ProductState } from "@/components/shared/Steps3";
+import { formSchema } from "../validation";
 
 
-export async function createProduct(formData: createProductProps) {
-    
-    const supabase = await createServer()
-    const { data : { user }, error: authError } = await supabase.auth.getUser()
-    if(authError || !user) {
-        throw new Error('unauthorized user')
+export type ActionState = {
+  
+  productName: string;
+  category: string;
+  description: string;
+  price: number;
+  stock: number;
+  thumbnail: File[];    
+  errors?: Record<string, string[]>;
+}
+
+export async function createProduct(
+  prevState: ActionState,
+  formData: FormData
+): Promise<ActionState | undefined> {
+  try {
+    // Validasi input menggunakan Zod
+    console.log("form : ", formData)
+    const validatedData = formSchema.safeParse({
+      productName: formData.get("productName") as string,
+      category: formData.get("category") as string,
+      description: formData.get("description") as string,
+      price: formData.get("price") as string,
+      stock: formData.get("stock") as string,
+      thumbnail: formData.getAll("thumbnail") || [] as File[],
+    });
+
+    // Simpan data ke database atau lakukan proses lainnya
+    console.log("Validated Data:", validatedData);
+
+    if (!validatedData.success) {
+      return {
+        productName,
+        category,
+        description,
+        price,
+        stock,
+        thumbnail,
+        errors: validatedData.error.flatten().fieldErrors,
+      };
     }
-
-    const { data, error } = await supabase
-                                .from('products')
-                                .insert({ ...formData, user_id: user?.id })
-                                .select()
-
-    if (error || !data) throw new Error(error?.message)
-
-
-    return data[0]
+  
+  } catch (error) {
+    console.error("Validation Error:", error);
+  }
 }
 
 export async function uploadImageProduct(files: File[]) {

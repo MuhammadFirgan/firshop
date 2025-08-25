@@ -12,18 +12,18 @@ export default function Step3Price({ formData, errors }: StepProps ) {
                 type="number"
                 id="productPrice"
                 className={`transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 ${errors?.productName ? 'border-red-500' : ''}`}
-                value={formData.price}
-                
+                defaultValue={formData.price ?? 0}
+                name="price"
             />
         </div>
         <div className="flex flex-col gap-3 w-full">
             <Label className="text-slate-600">Product stock</Label>
             <Input 
                 type="number"
-                id="productPrice"
+                id="stock"
+                name="stock"
                 className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
-                value={formData.stock}
-                
+                defaultValue={formData.stock ?? 0}
             />
         </div>
     </div>

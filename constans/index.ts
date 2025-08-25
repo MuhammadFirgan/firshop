@@ -119,6 +119,8 @@ export const products= [
 
 export const categories = ['All', 'Audio', 'Wearable', 'Gaming', 'Accessories', 'Camera', 'Smart Home']
 
+
+
 export interface Step1Data {
   productName: string;
   category: string;
@@ -134,7 +136,7 @@ export interface Step3Data {
 }
 
 export interface Step4Data {
-  images: File[]; 
+  thumbnail: File[]; 
 }
 
 
