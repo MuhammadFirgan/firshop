@@ -12,7 +12,8 @@ export default function Step1Info({ formData, errors }: StepProps) {
                 id="productName"
                 className={`transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 
                     ${errors?.productName ? 'border-red-500' : ''}`}
-                value={formData.productName}
+                defaultValue={formData.productName}
+                name="productName"
                 
             />
             {errors?.productName && (
@@ -23,7 +24,7 @@ export default function Step1Info({ formData, errors }: StepProps) {
         </div>
         <div className="flex w-full flex-col gap-3">
             <Label className="text-slate-600">Category Product</Label>
-            <Select value={formData.category}>
+            <Select defaultValue={formData.category} name="category">
                 <SelectTrigger className={`transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 w-full ${errors?.category ? 'border-red-500' : ''}`}>
                 <SelectValue placeholder="Theme" />
                 </SelectTrigger>
@@ -36,7 +37,7 @@ export default function Step1Info({ formData, errors }: StepProps) {
             </Select>
             {errors?.category && (
                 <p className="text-sm text-red-500 mt-1">
-                    // @ts-ignore
+                 
                     {errors.category[0]}
                 </p>
             )}

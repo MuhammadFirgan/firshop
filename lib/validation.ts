@@ -14,22 +14,14 @@ export const formSchema = z.object({
     .string()
     .min(2, "Description too short")
     .max(250, "Description too long"),
-    price: z
-      .number()
-      .positive('Price must be a positive number.')
-      .min(1, 'Price cannot be 0.'),
-    stock: z
-      .number()
-      .positive('Stock must be a positive number.')
-      .min(1, 'Stock cannot be 0.'),
+  price: z
+    .string()
+    .min(1, 'Price cannot be 0.'),
+  stock: z
+    .string()
+    .min(1, 'Stock cannot be 0.'),
   thumbnail: z
-    .custom<File>((file) => file instanceof File, {
-      message: "Thumbnail required",
-    })
-    .refine((file) => file.size <= MAX_FILE_SIZE, {
-      message: "Max file 3MB",
-    })
-    .refine((file) => file.type.startsWith("image/"), {
-      message: "File must be an image",
-    }),
+    .string({ required_error: "Thumbnail wajib di upload" })
+    .min(1,"Thumbnail wajib di upload")
+    
 })

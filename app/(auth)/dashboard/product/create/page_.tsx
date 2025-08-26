@@ -22,17 +22,7 @@ import {
   Trash2
 } from 'lucide-react';
 
-interface ProductFormData {
-  name: string;
-  description: string;
-  price: string;
-  category: string;
-  brand: string;
-  sku: string;
-  stock: string;
-  tags: string[];
-  images: File[];
-}
+
 
 export default function ProductForm() {
   const [currentStep, setCurrentStep] = useState(1);

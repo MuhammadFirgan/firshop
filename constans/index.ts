@@ -119,6 +119,8 @@ export const products= [
 
 export const categories = ['All', 'Audio', 'Wearable', 'Gaming', 'Accessories', 'Camera', 'Smart Home']
 
+
+
 export interface Step1Data {
   productName: string;
   category: string;
@@ -134,17 +136,9 @@ export interface Step3Data {
 }
 
 export interface Step4Data {
-  images: File[]; 
+  thumbnail: File[]; 
 }
 
 
 export interface ProductFormData extends Step1Data, Step2Data, Step3Data, Step4Data {}
 
-// Definisikan props untuk setiap komponen langkah
-export interface StepProps {
-  formData: ProductFormData;
-  errors: z.inferFlattenedErrors<typeof formSchema>['fieldErrors'];
-  // onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  // onSelectChange?: (value: string) => void;
-  // onImageChange?: (images: File[]) => void;
-}

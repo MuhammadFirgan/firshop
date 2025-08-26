@@ -1,201 +1,214 @@
-// components/Steps.tsx
 'use client'
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Textarea } from "../ui/textarea";
-import Step4Images from "./Step4Images";
-import ProgressStep, { steps } from "./ProgressStep";
+
+
 import { Button } from "../ui/button";
-import { useState } from "react";
-import Step1Info from "./Step1Info";
-import Step2Desc from "./Step2Desc";
-import Step3Price from "./Step3Price";
-import { useFormState } from "react-dom";
-import { createProduct } from "@/lib/action/product.action";
-import { z } from "zod";
+import { ScanBarcode } from "lucide-react";
+import { ProductState } from "./Steps3";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { formSchema } from "@/lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import CustomForm, { FieldType } from "./CustomForm";
+import FileUpload from "./FileUpload";
+import ProductCategory from "./ProductCategory";
 
 
-export default function Steps() {
-  
-  const [currentStep, setCurrentStep] = useState(1);
-  // const [formData, setFormData] = useState({
-  //   productName: '',
-  //   category: '',
-  //   description: '',
-  //   price: 0,
-  //   stock: 0,
-  //   images: []
-  // });
-  const [state, formAction] = useFormState(createProduct, {
-    status: 'idle',
-    data: {
-      productName: '',
-      category: '',
-      description: '',
-      price: 0,
-      stock: 0,
-      thumbnail: [] as File[]
-    }
+
+export default function Step() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+        ...formSchema,
+        productName: '',
+        description: '',
+        price: '',
+        stock: '',
+        
+      },
   })
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("values : ", values);
+  }
   
-  const nextStep = () => {
-    if (currentStep < steps.length) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  //   const { id, value } = e.target;
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     [id]: value
-  //   }));
-  // };
-
-  // const handleImageChange = (newImages: File[]) => {
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     images: newImages
-  //   }));
-  // };
   return (
-    <div className="max-w-sm overflow-x-auto md:max-w-full">
-      <ProgressStep
-        currentStep={currentStep}
-      />
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 p-5 rounded-lg flex flex-col gap-4">
-        <div className="text-xl text-slate-800 font-semibold">
-          {steps[currentStep - 1].title}
-        </div>
-        <div className="text-sm text-slate-600">
-          {currentStep === 1 && "Enter the basic information about your product"}
-          {currentStep === 2 && "Add detailed description and specifications"}
-          {currentStep === 3 && "Set your pricing and inventory details"}
-          {currentStep === 4 && "Upload product images to showcase your item"}
-        </div>
+    <section>
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 p-5 rounded-lg flex flex-col gap-4 my-4">
+        <h1>Enter the basic information about your product</h1>
       </div>
-      <form action={formAction} className="flex w-full gap-4 flex-col md:flex-row mt-7">
-        {currentStep === 1 && (
-          <Step1Info 
-            formData={state.data}
-            errors={state?.errors}
+      
+      <div className="py-8">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="flex flex-col items-center md:flex-row gap-4">
+              <div className="w-full">
+                <CustomForm  
+                    control={form.control}
+                    type={FieldType.INPUT}
+                    name="productName"
+                    label="Product Name"
+                    placeholder="Enter your product name..."
+                />
+              </div>
+              <div className="w-full">
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                      <FormItem>
+                          <FormLabel>Category</FormLabel>
+                          <FormControl>
+                              <ProductCategory onChangeHandler={field.onChange} value={field.value} />
+                          </FormControl>
+
+                          <FormMessage className="text-sm text-red-500"/>
+                      </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <div className="w-full">
+              <CustomForm  
+                control={form.control}
+                type={FieldType.TEXTAREA}
+                name="description"
+                label="Description"
+                placeholder="Enter your product description..."
+              />
+            </div>
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="w-full">
+                <CustomForm  
+                    control={form.control}
+                    type={FieldType.NUMBER}
+                    name="price"
+                    label="Price"
+                    placeholder="Enter your product price..."
+                />
+              </div>
+              <div className="w-full">
+                <CustomForm  
+                    control={form.control}
+                    type={FieldType.NUMBER}
+                    name="stock"
+                    label="Stock"
+                    placeholder="Enter your product stock..."
+                />
+              </div>
+            </div>
+
             
-          />
-        )}
-        {currentStep === 2 && (
-          <Step2Desc 
-            formData={state.data}
-            errors={state?.errors}
-            
-          />
-        )}
-        {currentStep === 3 && (
-          <Step3Price 
-            formData={state.data}
-            errors={state?.errors}
-            
-          />
-        )}
-        {currentStep === 4 && (
-          <Step4Images 
-            formData={state.data}
-            errors={state?.errors}
-          />
-        )}
-        
-        {/* <div className="flex flex-col gap-4 w-full md:flex-row ">
-          <div className="flex flex-col gap-3">
-            <Label htmlFor="productName" className="text-slate-600">Product Name</Label>
+
+          
+            <FormField
+                control={form.control}
+                name="thumbnail"
+                render={({ field }) => (
+                    <FormItem>
+                      <FileUpload value={field.value} onFieldChange={field.onChange}/>
+                      <FormMessage className="text-sm text-red-500"/>
+                    </FormItem>
+                )}
+            />
+            <Button 
+              type="submit" 
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white w-full my-7 flex">
+                <ScanBarcode className="text-white" />
+                <span className="text-white">Save Product</span>
+            </Button>
+          </form>
+        </Form>
+      </div>
+
+      {/* <form action={formAction} className="w-full flex flex-col gap-3">
+        <div className="flex flex-col md:flex-row gap-3">
+          <div className="flex flex-col w-full gap-3">
+            <Label htmlFor="productName">Product Name</Label>
             <Input 
               id="productName"
-              className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
+              className={`transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 
+                  ${state?.errors ? 'border-red-500' : ''}`}
+              defaultValue={state?.productName}
+              name="productName"
             />
+            {state?.errors?.productName && (
+              <p className="text-sm text-red-500">{state.errors.productName[0]}</p>
+            )}
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col w-full gap-3">
             <Label className="text-slate-600">Category Product</Label>
-            <Select>
-              <SelectTrigger className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 w-full">
+            <Select defaultValue={state?.category} name="category">
+                <SelectTrigger className={`transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 w-full ${state?.category ? 'border-red-500' : ''}`}>
                 <SelectValue placeholder="Theme" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                    {categories.map((category) => (
+                        <SelectItem key={category} value={category}>{category}</SelectItem>
+                    ))}
+                  
+                </SelectContent>
             </Select>
-          </div>
-          
-        </div> */}
-        {/* <div className="flex flex-col gap-4 w-full md:flex-row">
-          <div className="flex flex-col gap-3">
-            <Label htmlFor="productName" className="text-slate-600">Product Price</Label>
-            <Input 
-              type="number"
-              id="productPrice"
-              className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
-            />
-          </div>
-          <div className="flex flex-col gap-3">
-            <Label className="text-slate-600">Product stock</Label>
-            <Input 
-              type="number"
-              id="productPrice"
-              className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
-            />
-          </div>
-        </div>
-        <div className="flex flex-col gap-4 w-full md:flex-row">
-          <div className="flex flex-col gap-3">
-            <Label className="text-slate-600">Category</Label>
-            <div className="flex flex-col gap-3">
-              <Label className="text-slate-600">Description</Label>
-              <Textarea className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 h-60"/>
-            </div>
+            {state?.errors?.category && (
+              <p className="text-sm text-red-500">{state.errors.category[0]}</p>
+            )}
             
           </div>
-          <div className="flex flex-col gap-3">
-            <Label className="text-slate-600">Upload Product</Label>
-            <Step4Images />
+        </div>
+        <div className="w-full flex flex-col gap-3">
+          <Label className="text-slate-600">Description</Label>
+          <Textarea name="description" className={`transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 h-60 ${state?.description ? 'border-red-500' : ''}`} defaultValue={state?.description ?? ''}/>
+          {state?.errors?.description && (
+              <p className="text-sm text-red-500">{state.errors.description[0]}</p>
+          )}
+          
+        </div>
+
+        <div className="flex flex-col gap-4 w-full md:flex-row">
+          <div className="flex flex-col gap-3 w-full">
+              <Label htmlFor="productPrice" className="text-slate-600">Product Price</Label>
+              <Input 
+                  type="number"
+                  id="productPrice"
+                  className={`transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 ${state?.productName ? 'border-red-500' : ''}`}
+                  defaultValue={state?.price ?? 0}
+                  name="price"
+              />
+
+            {state?.errors?.price && (
+              <p className="text-sm text-red-500">{state.errors.price[0]}</p>
+            )}
           </div>
-        </div> */}
-      </form>
-      <div className="flex justify-between items-center p-8 text-white">
-        <Button 
-          variant="outline" 
-          onClick={prevStep}
-          disabled={currentStep === 1}
-          className="flex items-center gap-2"
-        >
-          Previous
-        </Button>
+          <div className="flex flex-col gap-3 w-full">
+            <Label className="text-slate-600">Product stock</Label>
+            <Input 
+                type="number"
+                id="stock"
+                name="stock"
+                className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
+                defaultValue={state?.stock ?? 0}
+            />
+            {state?.errors?.stock && (
+              <p className="text-sm text-red-500">{state.errors.stock[0]}</p>
+            )}
+          </div>
+         
         
-        <div className="flex gap-2 text-white">
-          {currentStep === steps.length ? (
-            <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 ">
-              <span className="text-white">Publish Product</span>
-              
-            </Button>
-           
-          ) : (
-            <Button 
-              onClick={nextStep}
-              
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
-            >
-              <span className="text-white">Next Step</span>
-           
-            </Button>
+        </div>
+        <div className="w-full flex flex-col gap-3 ">
+          <Label>Gambar Produk</Label>
+          <Step4Images />
+          {state?.errors?.images && (
+            <p className="text-sm text-red-500">{state.errors.images}</p>
           )}
         </div>
-      </div>
-    </div>
+        <Button 
+          type="submit" 
+          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white w-full my-7 flex">
+            <ScanBarcode className="text-white" />
+            <span className="text-white">Save Product</span>
+          </Button>
+      </form> */}
+    </section>
   )
 }
