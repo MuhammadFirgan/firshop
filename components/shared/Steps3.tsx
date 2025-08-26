@@ -4,7 +4,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-import Step4Images from "./Step4Images";
+import Step4Images from "./FileUpload";
 import ProgressStep, { steps } from "./ProgressStep";
 import { Button } from "../ui/button";
 import { useActionState, useState } from "react";

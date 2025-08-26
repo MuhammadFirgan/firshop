@@ -3,19 +3,20 @@ import { Upload, Trash2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { StepProps } from "@/constans";
+
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 const MAX_FILES = 5;
 
-export default function Step4Images() {
+interface UploadFileProps {
+  value?: File
+  onFieldChange: (fileUrl: String) => void
+}
+
+export default function FileUpload({ onFieldChange }: UploadFileProps) {
   const [previews, setPreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  
-
-  
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -48,12 +49,11 @@ export default function Step4Images() {
         </p>
         <Input
           type="file"
-          multiple
           accept="image/*"
           onChange={handleFileUpload}
           className="hidden"
           id="file-upload"
-          name="images"
+          name="thumbnail"
           ref={fileInputRef}
         />
         <Button 

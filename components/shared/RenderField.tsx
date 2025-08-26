@@ -29,7 +29,7 @@ export default function RenderField({ field, props }: { field: any, props: Custo
                     <FormControl>
                         <Input 
                             placeholder={props.placeholder} {...field}
-                            className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
+                            className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 w-full"
                             type="number"
                         />
                     </FormControl>
