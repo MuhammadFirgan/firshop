@@ -1,12 +1,12 @@
 'use server'
 import { createProductProps } from "@/types";
 
-import { ProductState } from "@/components/shared/Steps3";
 import { formSchema } from "../validation";
 
 import { revalidatePath } from "next/cache";
 import { parseStringify } from "../utils";
 import { createServer } from "../supabase/server";
+import { v4 as uuidv4 } from 'uuid'
 
 
 export type ActionState = {
@@ -69,100 +69,110 @@ export async function createProduct(
     const imageUrls: string[] = [];
     const uploadErrors: string[] = [];
 
-    for (const file of result.data.thumbnail) {
-      const buffer = await file.arrayBuffer();
-      const filename = `product-thumbnails/${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+    // for (const file of result.data.thumbnail) {
+    //   const buffer = await file.arrayBuffer();
+    //   const filename = `thumbnails/${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
   
-      const { data, error } = await supabase.storage
-        .from('product-thumbnails') // Nama bucket
-        .upload(filename, buffer, {
-          contentType: file.type,
-          upsert: false,
-        });
+    //   const { data, error } = await supabase.storage
+    //     .from('thumbnails') // Nama bucket
+    //     .upload(filename, buffer, {
+    //       contentType: file.type,
+    //       upsert: false,
+    //     });
   
-      if (error) {
-        uploadErrors.push(`Gagal upload ${file.name}: ${error.message}`);
-      } else {
-        const {  data: publicUrlData } = supabase.storage
-          .from('product-thumbnails')
-          .getPublicUrl(data.path);
-        imageUrls.push(publicUrlData.publicUrl);
-      }
-    }
+    //   if (error) {
+    //     uploadErrors.push(`Gagal upload ${file.name}: ${error.message}`);
+    //   } else {
+    //     const {  data: publicUrlData } = supabase.storage
+    //       .from('thumbnails')
+    //       .getPublicUrl(data.path);
+    //     imageUrls.push(publicUrlData.publicUrl);
+    //   }
+    // }
 
-    if (imageUrls.length === 0 && uploadErrors.length > 0) {
-      return {
-        ...prevState,
-        errors: {
-          thumbnail: uploadErrors,
-        },
-        productName: name,
-        category: cat,
-        description: desc,
-        price: prc,
-        stock: stk,
-        thumbnail,
-      };
-    }
+    // if (imageUrls.length === 0 && uploadErrors.length > 0) {
+    //   return {
+    //     ...prevState,
+    //     errors: {
+    //       thumbnail: uploadErrors,
+    //     },
+    //     productName: name,
+    //     category: cat,
+    //     description: desc,
+    //     price: prc,
+    //     stock: stk,
+    //     thumbnail,
+    //   };
+    // }
 
-    const {  data: product, error: dbError } = await supabase
-      .from('products')
-      .insert({
-        name,
-        category: cat,
-        description: desc,
-        price: prc,
-        stock: stk,
-        image_urls: imageUrls, // simpan sebagai array text[]
-        created_at: new Date().toISOString(),
-      })
-      .select()
-      .single();
+    // const {  data: product, error: dbError } = await supabase
+    //   .from('products')
+    //   .insert({
+    //     name,
+    //     category: cat,
+    //     description: desc,
+    //     price: prc,
+    //     stock: stk,
+    //     image_urls: imageUrls, // simpan sebagai array text[]
+    //     created_at: new Date().toISOString(),
+    //   })
+    //   .select()
+    //   .single();
 
-    if (dbError) {
-      return {
-        ...prevState,
-        errors: {
-          database: [dbError.message],
-        },
-        productName: name,
-        category: cat,
-        description: desc,
-        price: prc,
-        stock: stk,
-        thumbnail,
-      };
-    }
+    // if (dbError) {
+    //   return {
+    //     ...prevState,
+    //     errors: {
+    //       database: [dbError.message],
+    //     },
+    //     productName: name,
+    //     category: cat,
+    //     description: desc,
+    //     price: prc,
+    //     stock: stk,
+    //     thumbnail,
+    //   };
+    // }
 
-    revalidatePath('/dashboard/products');
-    revalidatePath('/products');
+    // revalidatePath('/dashboard/products');
+    // revalidatePath('/products');
 
-    return parseStringify(product);
+    // return parseStringify(product);
   
   } catch (error) {
     console.error("Validation Error:", error);
   }
 }
 
-export async function uploadImageProduct(files: File[]) {
-    const urls = [];
-    const supabase = await createServer();
-    for (const file of files) {
-      const fileName = `${Date.now()}-${file.name}`;
+export async function uploadImageProduct(formData: FormData) {
+    const supabase = await createServer()
+    const rawThumbnail = formData.get('thumbnail') as File;
 
-      const { data, error } = await supabase.storage
-        .from('product-thumbnails') 
-        .upload(fileName, file);
-
-      if (error) {
-        console.error('Error uploading image:', error);
-      } else {
-        const { data: publicUrlData } = supabase.storage
-          .from('product_thumbnails')
-          .getPublicUrl(fileName);
-        
-        urls.push(publicUrlData.publicUrl);
-      }
+    if (!rawThumbnail) {
+      console.error("file not provided")
     }
-    return urls;
+
+
+    const fileExt = rawThumbnail.name.split('.').pop();
+    const fileName = `${uuidv4()}.${fileExt}`
+    const filePath = `products/${fileName}`
+    
+
+    const { data, error } = await supabase.storage
+      .from('thumbnails')
+      .upload(filePath, rawThumbnail, {
+        cacheControl: '3600',
+        upsert: false,
+      })
+    
+    if(error) {
+      console.error(error)
+      return { error: 'Failed to Upload Image' }
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('thumbnails')
+      .getPublicUrl(filePath)
+
+    return { imageUrl: publicUrlData.publicUrl }
 }

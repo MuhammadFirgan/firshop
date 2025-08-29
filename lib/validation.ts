@@ -21,7 +21,7 @@ export const formSchema = z.object({
     .string()
     .min(1, 'Stock cannot be 0.'),
   thumbnail: z
-    .string({ required_error: "Thumbnail wajib di upload" })
+    .array(z.string()).min(1, { message: "At least one image is required." })
     .min(1,"Thumbnail wajib di upload")
     
 })
