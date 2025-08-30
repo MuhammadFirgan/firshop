@@ -1,9 +1,12 @@
 export interface createProductProps {
-    name: string
-    description: string
-    price: string
-    image_url: string
-    stock: number
+    products: {
+        productName: string
+        category: string
+        description: string
+        price: number
+        thumbnail: string
+        stock: number
+    }
 }
 
 export interface createStoreProps {
