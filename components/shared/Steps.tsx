@@ -12,24 +12,42 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import CustomForm, { FieldType } from "./CustomForm";
 import FileUpload from "./FileUpload";
 import ProductCategory from "./ProductCategory";
+import { Toaster } from "../ui/sonner";
+import { toast } from "sonner";
+import { createProduct } from "@/lib/action/product.action";
+import { useRouter } from "next/navigation";
 
 
 
 export default function Step() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
         ...formSchema,
         productName: '',
         description: '',
-        price: '',
-        stock: '',
+        price: 0,
+        stock: 0,
         
       },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("values : ", values);
+    try {
+      
+      const newProduct = await createProduct({products : {...values}})
+
+      if(newProduct) {
+        router.push('/dashboard/product')
+      }
+
+      toast("successfully created product.")
+
+    } catch (error) {
+      console.error(error)
+      toast("An error occurred while saving the product.")
+    }
   }
   
   return (

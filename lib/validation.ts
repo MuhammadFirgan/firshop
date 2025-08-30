@@ -12,16 +12,15 @@ export const formSchema = z.object({
     .min(2, "Category required"),
   description: z
     .string()
-    .min(2, "Description too short")
-    .max(250, "Description too long"),
-  price: z
-    .string()
-    .min(1, 'Price cannot be 0.'),
-  stock: z
-    .string()
-    .min(1, 'Stock cannot be 0.'),
+    .min(2, "Description too short"),
+  price: z.string().transform(v => parseFloat(v)).pipe(
+    z.number().min(0, { message: "Price must be a positive number." })
+  ),
+  stock: z.string().transform(v => parseInt(v, 10)).pipe(
+    z.number().int().min(0, { message: "Stock must be a non-negative integer." })
+  ),
   thumbnail: z
-    .array(z.string()).min(1, { message: "At least one image is required." })
-    .min(1,"Thumbnail wajib di upload")
+  .string()
+  .min(1, { message: "Please select at least one image." }),
     
 })
