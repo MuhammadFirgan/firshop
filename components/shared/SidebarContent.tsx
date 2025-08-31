@@ -1,15 +1,16 @@
 import { Store } from "lucide-react";
-import { navigation } from "./Sidebar";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import Filter from "../Filter";
 import Link from "next/link";
+import { NavigationItem } from "./GetNavigation";
 
 export type BarTypeProps = {
     type?: 'dashboard' | 'content'
+    navigation?: NavigationItem[]
 }
 
-export default function SidebarContent({ type = "content" }: BarTypeProps) {
+export default function SidebarContent({ type = "content", navigation = [] }: BarTypeProps) {
   return (
     <>
         {type === "dashboard" ? (
@@ -17,7 +18,7 @@ export default function SidebarContent({ type = "content" }: BarTypeProps) {
                 <ul role="list" className="flex flex-1 flex-col gap-y-7">
                     <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                            {navigation.map((item) => (
+                            {navigation.map((item: any) => (
                             <li key={item.name}>
                                 <Button
                                     asChild

@@ -9,17 +9,7 @@ import SidebarContent, { BarTypeProps } from './SidebarContent';
 
 
 
-export const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: Home, current: true },
-  { name: 'Products', href: '/dashboard/product', icon: Package, current: false },
-  { name: 'Orders', href: '#', icon: ShoppingCart, current: false },
-  { name: 'Customers', href: '#', icon: Users, current: false },
-  { name: 'Analytics', href: '#', icon: BarChart3, current: false },
-  { name: 'Marketing', href: '#', icon: Bell, current: false },
-  { name: 'Settings', href: '#', icon: Settings, current: false },
-];
-
-export default function Sidebar({type} : BarTypeProps) {
+export default function Sidebar({type, navigation} : BarTypeProps) {
 
   return (
     <>
@@ -31,13 +21,13 @@ export default function Sidebar({type} : BarTypeProps) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-72 p-0">
-          <SidebarContent type={type} />
+          <SidebarContent type={type} navigation={navigation}/>
         </SheetContent>
       </Sheet>
 
       <aside className="fixed left-0 top-0 h-screen p-6 w-[256px] z-[99999]">
         <div className='flex-col gap-5 hidden lg:flex'>
-          <SidebarContent type={type}/>
+          <SidebarContent type={type} navigation={navigation}/>
         </div>
       </aside>
     </>

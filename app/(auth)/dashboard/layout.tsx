@@ -1,12 +1,19 @@
+import GetNavigation from "@/components/shared/GetNavigation";
 import Navbar from "@/components/shared/Navbar";
 import Sidebar from "@/components/shared/Sidebar";
+import { getUserByRole } from "@/lib/action/auth.action";
 
 
-export default function layout({ children } : {children: React.ReactNode}) {
+export default async function layout({ children } : {children: React.ReactNode}) {
+
+  const userRole = await getUserByRole()
+  console.log("User Role in Layout:", userRole);
+
+  const navigation = GetNavigation(userRole)
   return (
     <div className="min-h-screen w-full">
     {/* <div className="min-h-screen w-full "> */}
-      <Sidebar type="dashboard"/>
+      <Sidebar type="dashboard" navigation={navigation} />
       <div className="relative">
         <Navbar type="dashboard" />
         
