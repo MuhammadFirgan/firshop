@@ -1,9 +1,34 @@
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { updateSession } from './lib/supabase/middleware'
+import { getUserByRole } from './lib/action/auth.action'
 
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+  const response = await updateSession(request)
+
+  const { pathname } = request.nextUrl
+
+  if(pathname.startsWith('/dashboard/')) {
+    const userRole = await getUserByRole()
+
+    if(userRole === null) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+
+    if (pathname.startsWith('/dashboard/users')) {
+      if (userRole !== 'super_admin') {
+        return NextResponse.redirect(new URL('/', request.url));
+      }
+    }
+
+    if(userRole !== 'employee' && userRole !== "super_admin") {
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+
+    return NextResponse.next()
+  }
+
+  return response
 }
 
 export const config = {

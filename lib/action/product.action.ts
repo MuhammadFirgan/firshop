@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import { parseStringify } from "../utils";
 import { createServer } from "../supabase/server";
 import { v4 as uuidv4 } from 'uuid'
+import { getUserByRole } from "./auth.action";
+import { redirect } from "next/navigation";
 
 
 
@@ -16,15 +18,17 @@ export async function createProduct({ products }: createProductProps) {
   try {
     const supabase = await createServer()
 
-    const { data: { user } } = await supabase.auth.getUser()
+    const user = await getUserByRole()
 
-    if(!user) {
-      return {
-        errors: {
-            authentication: ["You must be logged in to create a product."],
-        },
-      }
+    console.log("User Role:", user);
+
+    if(!user || user === null) {
+      return redirect('/login')
     };
+
+    if(user !== 'admin') {
+      return redirect('/')
+    }
     
   
     const {  data: product, error: dbError } = await supabase

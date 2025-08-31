@@ -26,3 +26,18 @@ export async function userLogout() {
 
     return parseStringify(logout)
 }
+
+export async function getUserByRole() {
+    const supabase = await createServer()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if(!user) return null
+
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+    return parseStringify(profile?.role || 'user')
+}
