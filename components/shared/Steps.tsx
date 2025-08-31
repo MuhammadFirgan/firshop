@@ -24,20 +24,25 @@ export default function Step() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        ...formSchema,
-        productName: '',
-        description: '',
-        price: 0,
-        stock: 0,
-        
-      },
+      ...formSchema,
+      productName: '',
+      description: '',
+      price: '',
+      stock: '',
+      
+    },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       
-      const newProduct = await createProduct({products : {...values}})
-
+      const parsedValues = {
+        ...values,
+        price: parseFloat(values.price),
+        stock: parseInt(values.stock, 10),
+      };
+  
+      const newProduct = await createProduct({ products: parsedValues });
       if(newProduct) {
         router.push('/dashboard/product')
       }
