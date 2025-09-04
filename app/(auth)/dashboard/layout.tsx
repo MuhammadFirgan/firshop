@@ -7,7 +7,6 @@ import { getUserByRole } from "@/lib/action/auth.action";
 export default async function layout({ children } : {children: React.ReactNode}) {
 
   const userRole = await getUserByRole()
-  console.log("User Role in Layout:", userRole);
 
   const navigation = GetNavigation(userRole)
   return (
