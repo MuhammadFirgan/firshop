@@ -5,10 +5,10 @@ import { columns } from "./columns"
 export default async function page() {
 
     const users = await getAllUser()
-    console.log("users : ", users)
+    
 
   return (
-    <div className="mx-8">
+    <div className="mx-8 mt-12">
       <DataTable columns={columns} data={users}/>
     </div>
   )
