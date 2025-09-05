@@ -1,5 +1,6 @@
 'use client'
 
+import { Badge } from "@/components/ui/badge"
 import { ColumnDef } from "@tanstack/react-table"
 
 export type users = {
@@ -24,8 +25,30 @@ export const columns: ColumnDef<users>[] = [
         header: "Role",
     },
     {
-        accessorKey: "bcm_employee",
-        header: "BCM Employee",
+        accessorKey: "role",
+        header: "actions",
+        cell: ({ row }) => {
+            const userRole = ['super_admin', 'employee', 'user'];
+
+            return (
+                <div className="flex space-x-2">
+                    
+                    <Badge variant="destructive">
+                        Super Admin
+                    </Badge>
+                    <Badge variant="warning">
+                        Employee
+                    </Badge>
+                    <Badge variant="primary">
+                        User
+                    </Badge>
+                    
+                    
+                </div>
+            )
+
+
+        }
         // cell: ({ row }) => (row.original.bcm_employee ? "Yes" : "No"),
     }
 ]
