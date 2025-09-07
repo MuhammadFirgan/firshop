@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation"
 import { parseStringify } from "../utils"
 import { createServer } from "../supabase/server"
+import { revalidatePath } from "next/cache"
 
 
 
@@ -74,7 +75,10 @@ export async function getAllUser() {
       // Logika Pengurutan
       const roleOrder = { 'super_admin': 1, 'admin': 2, 'user': 3 };
       formattedUsers.sort((a, b) => {
-        return (roleOrder[a.role] || 99) - (roleOrder[b.role] || 99);
+       
+        const aRoleValue = roleOrder[a.role as keyof typeof roleOrder] || 99;
+        const bRoleValue = roleOrder[b.role as keyof typeof roleOrder] || 99;
+        return aRoleValue - bRoleValue;
       });
   
       return parseStringify(formattedUsers);
@@ -85,58 +89,46 @@ export async function getAllUser() {
     }
   }
 
-// export async function getAllUser() {
-//     try {
-        
-//         const supabase = await createServer()
+export async function updateUserRole(profileId: string, newRole: string) {
+  const supabase = await createServer()
+
+  const { data: { user } } = await supabase.auth.getUser()
+   if(!user) {
+    return { error: 'Unauthorized' }
+   }
+
+
+
+  const { data : currentProfile, error: profileError } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+
+    if (profileError) {
+      console.error('Profile error:', profileError);
+      return { error: profileError };
+    }
+  
+    if (currentProfile?.role !== 'super_admin') {
+      return { error: 'Forbidden: Only super-admin can perform this action.'};
+    }
+
+   const { data: updateRole, error: dbError } = await supabase
+    .from('profiles')
+    .update({ role: newRole })
+    .eq('id', profileId)
+    .select()
+    .single()
+
+  if(dbError) {
     
-//         const { data } = await supabase.auth.admin.listUsers();
+    return { error: dbError }
+  }
 
-//         const results = data?.users
+  revalidatePath('/dashboard/users')
 
-//         const formattedUsers = results.map((result: any) => ({
-//             id: result.id,
-//             role: result.role,
-//             email: result.auth_users?.email,
-//             fullName: result.auth_users?.raw_user_meta_data?.full_name,     
-//         }))
-
-//         return parseStringify(results)
-    
-//         // const { data: profile } = await supabase
-//         //     .from('profiles')
-//         //     .select('role')
-//         //     .eq('id', user?.id)
-//         // if (profile?.role !== 'super_admin') {
-//         //     return { error: 'Forbidden' };
-//         // }
-
-//         // console.log("profile : ", profile)
-    
-//         // const { data: users, error } = await supabase
-//         //     .from('profiles')
-//         //     .select(`
-//         //         id,
-//         //         role,
-//         //         auth_users:auth.users(email, raw_user_meta_data)  
-//         //     `)
-
-//         // if (error) {
-//         //     console.error('Error fetching users:', error);
-//         //     return { error: error.message };
-//         // }
-
-//         // const formattedUsers = users.map((u: any) => ({
-//         //     id: u.id,
-//         //     role: u.role,
-//         //     email: u.auth_users?.email,
-//         //     fullName: u.auth_users?.raw_user_meta_data?.full_name,     
-//         // }))
-
-//         // return parseStringify(formattedUsers)
-
-
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
+  return parseStringify(updateRole)
+      
+}
