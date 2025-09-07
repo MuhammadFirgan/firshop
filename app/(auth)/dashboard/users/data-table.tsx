@@ -40,11 +40,11 @@ export default function DataTable<TData, TValue>({
           onChange={(event) => table.getColumn("fullName")?.setFilterValue(event.target.value)}
         />
       </div>
-      <div className="overflow-hidden rounded-md border">
+      <div className="overflow-hidden rounded-md border border-gray-200">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="bg-blue-50 border-gray-200">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
