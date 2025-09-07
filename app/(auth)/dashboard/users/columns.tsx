@@ -1,15 +1,25 @@
 'use client'
 
 import { Badge } from "@/components/ui/badge"
+import { updateUserRole } from "@/lib/action/auth.action"
 import { ColumnDef } from "@tanstack/react-table"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { toast } from "sonner"
 
 export type users = {
     id: string
-    name: string
-    email: string
+    fullName: string | null
+    email: string | null
     role: string
-    bcm_employee: boolean
 }
+
+type BadgeVariant = "destructive" | "warning" | "primary" | "default" | "secondary" | "outline" | "success" | null | undefined;
+
+type RoleBadge = {
+    name: string;
+    variant: BadgeVariant;
+};
 
 export const columns: ColumnDef<users>[] = [
     {
@@ -28,20 +38,65 @@ export const columns: ColumnDef<users>[] = [
         accessorKey: "role",
         header: "actions",
         cell: ({ row }) => {
-            const userRole = ['super_admin', 'employee', 'user'];
+       
+            const currentRole = row.original.role
+            // const userRole = ['super_admin', 'employee', 'user']
+            const roles: RoleBadge[] = [
+                {
+                    name: "super_admin",
+                    variant: "destructive"
+                },
+                {
+                    name: "employee",
+                    variant: "warning"
+                },
+                {
+                    name: "user",
+                    variant: "primary"
+                },
+            ]
+            const [loading, setLoading] = useState(false)
+            const router = useRouter()
+
+            const handleChangeRole = async (newRole: string) => {
+                if(loading) return 
+                setLoading(true)
+
+                const result = await updateUserRole(row.original.id, newRole)
+                console.log("result : ", result)
+                console.log("result err : ", result.error)
+
+                if(result) {
+
+                    toast("role updated")
+                    router.push("/dashboard/users")
+                } else {
+                    toast(result.error)
+                }
+
+                setLoading(false)
+            }
+
+            // const getVariant = (role: string) => {
+            //     if (currentRole === 'super_admin' && role === 'super_admin') return 'destructive';
+            //     if (currentRole === 'admin' && role === 'admin') return 'warning';
+            //     if (currentRole === 'user' && role === 'user') return 'primary';
+            //     return 'secondary';
+            // };
 
             return (
                 <div className="flex space-x-2">
-                    
-                    <Badge variant="destructive">
-                        Super Admin
-                    </Badge>
-                    <Badge variant="warning">
-                        Employee
-                    </Badge>
-                    <Badge variant="primary">
-                        User
-                    </Badge>
+                    {roles.map(role => (
+                        <Badge 
+                            key={`${row.id}_${role.name}`} 
+                            variant={role.variant}
+                            onClick={() => handleChangeRole(role.name)}
+                            className="cursor-pointer"
+                        >
+                            {role.name.replace('_', ' ')}
+                        </Badge>
+                        
+                    ))}
                     
                     
                 </div>
@@ -49,6 +104,6 @@ export const columns: ColumnDef<users>[] = [
 
 
         }
-        // cell: ({ row }) => (row.original.bcm_employee ? "Yes" : "No"),
+      
     }
 ]
