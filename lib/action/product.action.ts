@@ -7,7 +7,6 @@ import { revalidatePath } from "next/cache";
 import { parseStringify } from "../utils";
 import { createServer } from "../supabase/server";
 import { v4 as uuidv4 } from 'uuid'
-import { getUserByRole } from "./auth.action";
 import { redirect } from "next/navigation";
 
 
@@ -18,16 +17,23 @@ export async function createProduct({ products }: createProductProps) {
   try {
     const supabase = await createServer()
 
-    const user = await getUserByRole()
+    const { data: { user } } = await supabase.auth.getUser();
 
-    console.log("User Role:", user);
+ 
+    if (!user) {
+      return redirect('/login');
+    }
+    
+    // 2. Dapatkan peran pengguna dari tabel profiles
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
 
-    if(!user || user === null) {
-      return redirect('/login')
-    };
-
-    if(user !== 'admin') {
-      return redirect('/')
+    // 3. Verifikasi peran
+    if (profile?.role !== 'employee' && profile?.role !== 'super_admin') {
+      return redirect('/');
     }
     
   
