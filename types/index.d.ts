@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 
 export interface createProductProps {
+    id?: string
     products: {
         productName: string
         category: string

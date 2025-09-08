@@ -3,7 +3,6 @@
 
 import { Button } from "../ui/button";
 import { ScanBarcode } from "lucide-react";
-import { ProductState } from "./Steps3";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { formSchema } from "@/lib/validation";
@@ -14,44 +13,86 @@ import FileUpload from "./FileUpload";
 import ProductCategory from "./ProductCategory";
 import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
-import { createProduct } from "@/lib/action/product.action";
+import { createProduct, updateProducts } from "@/lib/action/product.action";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+
+interface dataEditProps {
+  id?: string
+  name: string
+  description: string
+  category: string
+  price: number
+  stock: number
+}
 
 
 
-export default function Step() {
-  const router = useRouter()
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
+export default function Step({ dataEdit, type }: { dataEdit?: dataEditProps, type: 'create' | 'update' }) {
+  
+  const defaultFormValues = type === 'update' && dataEdit
+    ? {
+      productName: dataEdit.name,
+      category: dataEdit.category,
+      description: dataEdit.description,
+      price: dataEdit.price.toString(),
+      stock: dataEdit.stock.toString(),
+      // Tambahkan properti lain yang relevan di sini
+    }
+    : {
       ...formSchema,
       productName: '',
+      category: '', // Pastikan category diinisialisasi
       description: '',
       price: '',
       stock: '',
-      
-    },
+    };
+
+  const router = useRouter()
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: defaultFormValues,
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      
-      const parsedValues = {
-        ...values,
-        price: parseFloat(values.price),
-        stock: parseInt(values.stock, 10),
-      };
+    const parsedValues = {
+      ...values,
+      price: parseFloat(values.price),
+      stock: parseInt(values.stock, 10),
+    };
+
+    if (type === "create") {
+
+      try {
+
+        const newProduct = await createProduct({ products: parsedValues });
+        if(newProduct) {
+          router.push('/dashboard/product')
+        }
   
-      const newProduct = await createProduct({ products: parsedValues });
-      if(newProduct) {
-        router.push('/dashboard/product')
+        toast("successfully created product.")
+  
+      } catch (error) {
+        console.error(error)
+        toast("An error occurred while saving the product.")
       }
+    }
 
-      toast("successfully created product.")
-
-    } catch (error) {
-      console.error(error)
-      toast("An error occurred while saving the product.")
+    if (type === "update") {
+      try {
+        const updateProduct = await updateProducts({
+          id: dataEdit?.id!,
+          products: parsedValues
+        });
+        if(updateProduct) {
+          router.push('/dashboard/product')
+        }
+        toast("successfully updated product.")
+      } catch (error) {
+        console.error(error)
+        toast("An error occurred while edit the product.")
+      }
     }
   }
   

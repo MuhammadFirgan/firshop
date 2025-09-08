@@ -8,6 +8,7 @@ import { parseStringify } from "../utils";
 import { createServer } from "../supabase/server";
 import { v4 as uuidv4 } from 'uuid'
 import { redirect } from "next/navigation";
+import { getUserByRole } from "./auth.action";
 
 
 
@@ -71,39 +72,6 @@ export async function createProduct({ products }: createProductProps) {
   }
 }
 
-export async function uploadImageProduct(formData: FormData) {
-    const supabase = await createServer()
-    const rawThumbnail = formData.get('thumbnail') as File;
-
-    if (!rawThumbnail) {
-      console.error("file not provided")
-    }
-
-
-    const fileExt = rawThumbnail.name.split('.').pop();
-    const fileName = `${uuidv4()}.${fileExt}`
-    const filePath = `products/${fileName}`
-    
-
-    const { data, error } = await supabase.storage
-      .from('thumbnails')
-      .upload(filePath, rawThumbnail, {
-        cacheControl: '3600',
-        upsert: false,
-      })
-    
-    if(error) {
-      console.error(error)
-      return { error: 'Failed to Upload Image' }
-    }
-
-    const { data: publicUrlData } = supabase.storage
-      .from('thumbnails')
-      .getPublicUrl(filePath)
-
-    return { imageUrl: publicUrlData.publicUrl }
-}
-
 export async function getAllProducts() {
   try {
     const supabase = await createServer()
@@ -122,4 +90,110 @@ export async function getAllProducts() {
   } catch (error) {
     console.error(error)
   }
+}
+
+export async function getProductById(id: string) {
+  try {
+    const supabase = await createServer()
+
+    const userRole = await getUserByRole()
+    
+    if(userRole !== 'employee' && userRole !== 'super_admin') {
+      return redirect('/')
+    }
+
+    const { data: product, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if(error) {
+      return { error: 'Failed to fetch product' }
+    }
+
+    return parseStringify(product)
+    
+  } catch(error) {
+    console.error(error)
+  }
+}
+
+export async function updateProducts({ id, products }: createProductProps) {
+  try {
+    const supabase = await createServer()
+
+    const userRole = await getUserByRole()
+    
+    if(userRole !== 'employee' && userRole !== 'super_admin') {
+      return redirect('/')
+    }
+
+    const { data: product, error } = await supabase
+      .from('products')
+      .update({
+        name: products.productName,
+        category: products.category,
+        description: products.description,
+        price: products.price,
+        stock: products.stock,
+        thumbnail_url: products.thumbnail,
+      })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if(error) {
+      return { error: 'Failed to fetch product' };
+    }
+
+    revalidatePath('/dashboard/products');
+    revalidatePath('/products');
+
+    return parseStringify(product)
+    
+  } catch (error) {
+    console.error("Validation Error:", error);
+  }
+}
+
+export async function deleteProduct(id: string) {
+  try {
+    const supabase = await createServer()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function uploadImageProduct(formData: FormData) {
+  const supabase = await createServer()
+  const rawThumbnail = formData.get('thumbnail') as File;
+
+  if (!rawThumbnail) {
+    console.error("file not provided")
+  }
+
+
+  const fileExt = rawThumbnail.name.split('.').pop();
+  const fileName = `${uuidv4()}.${fileExt}`
+  const filePath = `products/${fileName}`
+  
+
+  const { data, error } = await supabase.storage
+    .from('thumbnails')
+    .upload(filePath, rawThumbnail, {
+      cacheControl: '3600',
+      upsert: false,
+    })
+  
+  if(error) {
+    console.error(error)
+    return { error: 'Failed to Upload Image' }
+  }
+
+  const { data: publicUrlData } = supabase.storage
+    .from('thumbnails')
+    .getPublicUrl(filePath)
+
+  return { imageUrl: publicUrlData.publicUrl }
 }
