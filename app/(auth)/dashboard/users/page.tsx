@@ -17,6 +17,7 @@ export default async function page() {
           <p className="text-slate-600 mt-1">Here’s What We Offer: A Closer Look at Our Products</p>
         </div> 
       </div>
+      {/* @ts-ignore */}
       <DataTable columns={columns} data={users}/>
     </div>
   )

@@ -2,17 +2,13 @@
 
 import { Badge } from "@/components/ui/badge"
 import { updateUserRole } from "@/lib/action/auth.action"
+import { users } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 
-export type users = {
-    id: string
-    fullName: string | null
-    email: string | null
-    role: string
-}
+
 
 type BadgeVariant = "destructive" | "warning" | "primary" | "default" | "secondary" | "outline" | "success" | null | undefined;
 
