@@ -103,3 +103,23 @@ export async function uploadImageProduct(formData: FormData) {
 
     return { imageUrl: publicUrlData.publicUrl }
 }
+
+export async function getAllProducts() {
+  try {
+    const supabase = await createServer()
+
+    const { data: products, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('created_at', { ascending: false })
+    
+    if(error) {
+      return { error: 'Failed to fetch products' }
+    }
+
+    return parseStringify(products)
+    
+  } catch (error) {
+    console.error(error)
+  }
+}
