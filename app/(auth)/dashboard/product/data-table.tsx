@@ -24,7 +24,7 @@ export default function DataTableProducts<TData, TValue>({ columns, data }: Data
       })
   return (
     <div>
-      <div className="w-full mb-4">
+      <div className="max-w-xs mb-4">
         <Input 
           placeholder="Search users..."
           value={(table.getColumn("fullName")?.getFilterValue() as string) ?? ""}

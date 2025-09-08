@@ -3,14 +3,10 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { DataTableProps } from "@/types"
 import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, SortingState, useReactTable } from "@tanstack/react-table"
 import { useState } from "react"
 
-
-interface DataTableProps<TData, Tvalue> {
-    columns: ColumnDef<TData, Tvalue>[]
-    data: TData[]
-}
 
 export default function DataTable<TData, TValue>({
     columns,

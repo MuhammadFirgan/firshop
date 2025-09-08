@@ -41,6 +41,7 @@ export default async function page() {
            <Link href="/dashboard/product/create">Create New Product</Link>
          </Button> 
        </div>
+       {/* @ts-ignore */}
       <DataTableProducts columns={columns} data={products}/>
     </div>
     // <section className="p-7 h-screen md:pl-20 md:pr-16 -mt-24">
