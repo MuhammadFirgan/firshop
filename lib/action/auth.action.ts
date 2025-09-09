@@ -43,51 +43,63 @@ export async function getUserByRole() {
     return parseStringify(profile?.role || 'user')
 }
 
-export async function getAllUser() {
-    try {
-      const supabase = await createServer();
-      const userRole = await getUserByRole();
-      if (userRole !== 'super_admin') {
-        return { error: 'Forbidden' };
-      }
-      const { data: { users }, error: authError } = await supabase.auth.admin.listUsers();
-      if (authError) {
-        console.error('Auth error:', authError);
-        return { error: 'Failed to fetch user data.' };
-      }
-      const { data: profiles, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, role');
-      if (profileError) {
-        console.error('Profile error:', profileError);
-        return { error: 'Failed to fetch user profiles.' };
-      }
-      
-      const roleMap = new Map(profiles.map(p => [p.id, p.role]));
-  
-      const formattedUsers = users.map(user => ({
-        id: user.id,
-        role: roleMap.get(user.id) || 'user',
-        email: user.email,
-        fullName: user.user_metadata?.full_name || 'N/A',
-      }));
-  
-      // Logika Pengurutan
-      const roleOrder = { 'super_admin': 1, 'admin': 2, 'user': 3 };
-      formattedUsers.sort((a, b) => {
-       
-        const aRoleValue = roleOrder[a.role as keyof typeof roleOrder] || 99;
-        const bRoleValue = roleOrder[b.role as keyof typeof roleOrder] || 99;
-        return aRoleValue - bRoleValue;
-      });
-  
-      return parseStringify(formattedUsers);
-  
-    } catch (error) {
-      console.error(error);
-      return { error: 'An unexpected error occurred.' };
+export async function getAllUser(page: number, pageSize: number = 10, query: string = '') {
+  try {
+    const supabase = await createServer();
+    const userRole = await getUserByRole();
+    if (userRole !== 'super_admin') {
+      return { users: [], count: 0, error: 'Forbidden' };
     }
+
+    const { data, error: authError } = await supabase.auth.admin.listUsers({
+      perPage: pageSize
+    });
+    if (authError) {
+      return { users: [], count: 0, error: 'Failed to fetch user data.' };
+    }
+
+    const { data: profiles, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, role');
+    if (profileError) {
+      return { users: [], count: 0, error: 'Failed to fetch user profiles.' };
+    }
+    
+    const roleMap = new Map(profiles.map(p => [p.id, p.role]));
+
+    let formattedUsers = data.users.map((user: any) => ({
+      id: user.id,
+      role: roleMap.get(user.id) || 'user',
+      email: user.email,
+      fullName: user.user_metadata?.full_name || 'N/A',
+    }));
+
+    // --- Perbaikan di sini: Tambahkan logika filter berdasarkan query
+    if (query) {
+      formattedUsers = formattedUsers.filter((user :any) => {
+        const nameMatch = user.fullName?.toLowerCase().includes(query.toLowerCase());
+        const emailMatch = user.email?.toLowerCase().includes(query.toLowerCase());
+        const roleMatch = user.role.toLowerCase().includes(query.toLowerCase());
+
+        return nameMatch || emailMatch || roleMatch;
+      });
+    }
+
+    // Logika Pengurutan
+    const roleOrder: Record<string, number> = { 'super_admin': 1, 'admin': 2, 'user': 3 };
+    formattedUsers.sort((a, b) => (roleOrder[a.role as keyof typeof roleOrder] || 99) - (roleOrder[b.role as keyof typeof roleOrder] || 99));
+
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedUsers = formattedUsers.slice(startIndex, endIndex);
+
+    return { users: parseStringify(paginatedUsers), count: formattedUsers.length, error: null };
+    
+  } catch (error) {
+    console.error(error);
+    return { users: [], count: 0, error: 'An unexpected error occurred.' };
   }
+}
 
 export async function updateUserRole(profileId: string, newRole: string) {
   const supabase = await createServer()
