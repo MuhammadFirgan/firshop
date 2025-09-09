@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
+import { formatRupiah } from "@/lib/utils"
 import { createProductProps } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { Edit, Trash } from "lucide-react"
@@ -18,6 +19,10 @@ export const columns: ColumnDef<createProductProps>[] = [
     {
         accessorKey: 'price',
         header: 'Price',
+        cell: ({ row }) => {
+            const price = parseFloat(row.getValue("price"))
+            return <span>{formatRupiah(price)}</span>
+        }
     },
     {
         accessorKey: 'stock',

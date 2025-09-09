@@ -1,34 +1,78 @@
+// _components/data-table.tsx
 'use client'
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DataTableProps } from "@/types";
-import { ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, SortingState, useReactTable } from "@tanstack/react-table";
-import { useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { ColumnDef, flexRender, getCoreRowModel, getFilteredRowModel, useReactTable } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+
+export interface DataTableProps<TData, Tvalue> {
+  columns: ColumnDef<TData, Tvalue>[]
+  data: TData[]
+  count: number;
+  page: number;
+  pageSize: number;
+  query: string;
+}
+
+export default function DataTableProducts<TData, TValue>({
+  columns,
+  data,
+  count,
+  page,
+  pageSize,
+  query,
+}: DataTableProps<TData, TValue>) {
+  const router = useRouter();
+
+  const [localQuery, setLocalQuery] = useState(query);
+  const debouncedQuery = useDebounce(localQuery, 500);
 
 
-export default function DataTableProducts<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = useState<SortingState>([])
-      const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-      const table = useReactTable({
-          data,
-          columns,
-          getCoreRowModel: getCoreRowModel(),
-          onColumnFiltersChange: setColumnFilters,
-          getFilteredRowModel: getFilteredRowModel(),
-          getPaginationRowModel: getCoreRowModel(),
-          state: {
-            columnFilters
-          }
-      })
+
+  useEffect(() => {
+
+    if (debouncedQuery !== query) {
+      router.replace(`/dashboard/product?page=1&query=${debouncedQuery}`);
+    }
+  }, [debouncedQuery, query, router]);
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    pageCount: Math.ceil(count / pageSize),
+    state: {
+      pagination: {
+        pageIndex: page - 1,
+        pageSize: pageSize
+      }
+    }
+  });
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalQuery(event.target.value);
+  };
+
+  const handleNextPage = () => {
+    // Gunakan router.push untuk navigasi pagination
+    router.push(`/dashboard/products?page=${page + 1}&query=${query}`);
+  };
+
+  const handlePreviousPage = () => {
+    router.push(`/dashboard/products?page=${page - 1}&query=${query}`);
+  };
+  
   return (
     <div>
       <div className="max-w-xs mb-4">
         <Input 
-          placeholder="Search users..."
-          value={(table.getColumn("fullName")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("fullName")?.setFilterValue(event.target.value)}
+          placeholder="Search product..."
+          value={localQuery}
+          onChange={handleSearch}
         />
       </div>
       <div className="overflow-hidden rounded-md border border-gray-200">
@@ -46,7 +90,7 @@ export default function DataTableProducts<TData, TValue>({ columns, data }: Data
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -79,20 +123,20 @@ export default function DataTableProducts<TData, TValue>({ columns, data }: Data
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={handlePreviousPage}
+          disabled={page === 1}
         >
           Previous
         </Button>
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={handleNextPage}
+          disabled={page * pageSize >= count}
         >
           Next
         </Button>
       </div>
     </div>
-  )
+  );
 }

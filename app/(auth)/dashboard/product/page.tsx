@@ -25,8 +25,13 @@ import { getAllProducts } from "@/lib/action/product.action";
 import { columns } from './columns';
 
 
-export default async function page() {
-  const products = await getAllProducts()
+export default async function page({ searchParams }: { searchParams: { page?: string, query?: string } }) {
+
+  const page = parseInt((await searchParams).page || '1');
+  const pageSize = 10;
+  const searchQuery = (await searchParams).query || '';
+
+  const result = await getAllProducts(page, pageSize, searchQuery)
 
   return (
     <div className="p-7 h-screen md:pl-20 md:pr-16 -mt-24">
@@ -42,7 +47,14 @@ export default async function page() {
          </Button> 
        </div>
        {/* @ts-ignore */}
-      <DataTableProducts columns={columns} data={products}/>
+      <DataTableProducts 
+        columns={columns} 
+        data={result?.products || []}
+        count={result?.count || 0}
+        page={page}
+        pageSize={pageSize}
+        query={searchQuery}
+      />
     </div>
     
   )

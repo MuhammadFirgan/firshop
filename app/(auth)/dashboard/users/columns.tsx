@@ -31,12 +31,10 @@ export const columns: ColumnDef<users>[] = [
         header: "Role",
     },
     {
-        accessorKey: "role",
+        accessorKey: "actions",
         header: "actions",
         cell: ({ row }) => {
-       
-            const currentRole = row.original.role
-            // const userRole = ['super_admin', 'employee', 'user']
+
             const roles: RoleBadge[] = [
                 {
                     name: "super_admin",
@@ -59,8 +57,6 @@ export const columns: ColumnDef<users>[] = [
                 setLoading(true)
 
                 const result = await updateUserRole(row.original.id, newRole)
-                console.log("result : ", result)
-                console.log("result err : ", result.error)
 
                 if(result) {
 
@@ -73,12 +69,6 @@ export const columns: ColumnDef<users>[] = [
                 setLoading(false)
             }
 
-            // const getVariant = (role: string) => {
-            //     if (currentRole === 'super_admin' && role === 'super_admin') return 'destructive';
-            //     if (currentRole === 'admin' && role === 'admin') return 'warning';
-            //     if (currentRole === 'user' && role === 'user') return 'primary';
-            //     return 'secondary';
-            // };
 
             return (
                 <div className="flex space-x-2">

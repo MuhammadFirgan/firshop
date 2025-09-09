@@ -1,4 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
+import page from './../app/search/[keyword]/page';
 
 export interface createProductProps {
     id?: string
@@ -28,4 +29,8 @@ export type users = {
 export interface DataTableProps<TData, Tvalue> {
     columns: ColumnDef<TData, Tvalue>[]
     data: TData[]
+    count: number
+    page: number
+    pageSize: number
+    query: string
 }

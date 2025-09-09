@@ -72,20 +72,39 @@ export async function createProduct({ products }: createProductProps) {
   }
 }
 
-export async function getAllProducts() {
+export async function getAllProducts(page: number, pageSize: number, query: string = '') {
   try {
     const supabase = await createServer()
 
-    const { data: products, error } = await supabase
+    const startIndex = (page - 1) * pageSize
+    const endIndex = startIndex + pageSize - 1
+
+    let productsQuery = supabase
       .from('products')
-      .select('*')
-      .order('created_at', { ascending: false })
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false });
+
+   
+      if (query) {
+        const cleanedQuery = query.replace(/[^0-9]/g, '');
+        const isNumericQuery = !isNaN(Number(cleanedQuery));
+  
+        let filterConditions = `name.ilike.%${query}%,category.ilike.%${query}%`;
+        
+        if (isNumericQuery) {
+          filterConditions += `,price.eq.${cleanedQuery},stock.eq.${cleanedQuery}`;
+        }
+        
+        productsQuery = productsQuery.or(filterConditions);
+      }
+
+    const { data: products, count, error } = await productsQuery.range(startIndex, endIndex);
     
     if(error) {
       return { error: 'Failed to fetch products' }
     }
 
-    return parseStringify(products)
+    return { products: parseStringify(products), count: count };
     
   } catch (error) {
     console.error(error)
