@@ -13,11 +13,6 @@ export interface createProductProps {
     }
 }
 
-export interface createStoreProps {
-    name: string
-    description: string
-    poster?: File
-}
 
 export type users = {
     id: string
@@ -33,4 +28,12 @@ export interface DataTableProps<TData, Tvalue> {
     page: number
     pageSize: number
     query: string
+}
+
+export interface MarketingProps {
+    discount: number
+    tagline: string
+    start_date: string
+    end_date: string
+    thumbnail: string
 }

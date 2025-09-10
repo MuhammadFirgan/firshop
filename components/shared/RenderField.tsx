@@ -14,7 +14,7 @@ export default function RenderField({ field, props }: { field: any, props: Custo
                     <FormControl>
                         <Input 
                             placeholder={props.placeholder}
-                            className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
+                            className="transition-all duration-300 border-gray-200  focus:border-blue-400 focus:ring-blue-400/20"
                             {...field}
                            
                         />
@@ -29,7 +29,7 @@ export default function RenderField({ field, props }: { field: any, props: Custo
                     <FormControl>
                         <Input 
                             placeholder={props.placeholder} {...field}
-                            className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 w-full"
+                            className="transition-all duration-300 border-gray-200  focus:border-blue-400 focus:ring-blue-400/20 w-full"
                             type="number"
                         />
                     </FormControl>
@@ -42,7 +42,7 @@ export default function RenderField({ field, props }: { field: any, props: Custo
                     
                     <FormLabel>{props.label}</FormLabel>
                     <FormControl>
-                        <Textarea className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 h-60" placeholder={props.placeholder} {...field}/>
+                        <Textarea className="transition-all duration-300 border-gray-200  focus:border-blue-400 focus:ring-blue-400/20 h-60" placeholder={props.placeholder} {...field}/>
                     </FormControl>
                     <FormMessage className="text-sm text-red-500" />
                 
@@ -56,7 +56,7 @@ export default function RenderField({ field, props }: { field: any, props: Custo
                     <FormLabel>{props.label}</FormLabel>
                     <FormControl>
                         <Select defaultValue={field.value} onValueChange={field.onChange}>
-                            <SelectTrigger className="transition-all duration-300 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 w-full">
+                            <SelectTrigger className="transition-all duration-300 border-gray-200  focus:border-blue-400 focus:ring-blue-400/20 w-full">
                                 <SelectValue placeholder={props.placeholder} />
                             </SelectTrigger>
                             <SelectContent className="bg-white shad-select-content">
@@ -71,9 +71,9 @@ export default function RenderField({ field, props }: { field: any, props: Custo
         case FieldType.UPLOAD:
             return (
                 <>
-                    
+                    <FormLabel>{props.label}</FormLabel>
                     <FormControl>
-                        <Input id="picture" type="file"  placeholder={props.placeholder} {...field} className="shad-input bg-zinc-900 border-none w-full" />
+                        <Input id="picture" type="file"  placeholder={props.placeholder} {...field} className="shad-input border-zinc-200 w-full" />
                         
                     </FormControl>
                     <FormMessage className="text-sm text-red-500" />

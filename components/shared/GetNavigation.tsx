@@ -13,9 +13,9 @@ export default function GetNavigation(role: rolesProps) {
     const baseNavigation = [
         { name: 'Dashboard', href: '/dashboard', icon: Home, current: true },
         { name: 'Products', href: '/dashboard/product', icon: Package, current: false },
-        { name: 'Orders', href: '#', icon: ShoppingCart, current: false },
-        { name: 'Analytics', href: '#', icon: BarChart3, current: false },
-        { name: 'Marketing', href: '#', icon: Bell, current: false },
+        { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCart, current: false },
+        { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3, current: false },
+        { name: 'Marketing', href: '/dashboard/marketing', icon: Bell, current: false },
         { name: 'Settings', href: '#', icon: Settings, current: false },
     ];
 
