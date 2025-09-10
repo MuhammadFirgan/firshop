@@ -15,7 +15,7 @@ import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
 import { createProduct, updateProducts } from "@/lib/action/product.action";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+
 
 
 interface dataEditProps {
