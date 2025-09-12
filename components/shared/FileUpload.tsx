@@ -14,9 +14,11 @@ const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 interface UploadFileProps {
   value?: string;
   onFieldChange: (fileUrl: string) => void;
+  onUpload: (formData: FormData) => Promise<{ imageUrl?: string; error?: string }>;
+
 }
 
-export default function FileUpload({ onFieldChange, value }: UploadFileProps) {
+export default function FileUpload({ onFieldChange, value, onUpload }: UploadFileProps) {
   const [preview, setPreview] = useState<string | null>(value || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -39,7 +41,7 @@ export default function FileUpload({ onFieldChange, value }: UploadFileProps) {
     formData.append('thumbnail', file); // Kunci 'thumbnail' harus cocok dengan Server Action
     
     // Panggil Server Action
-    const { imageUrl, error } = await uploadImageProduct(formData);
+    const { imageUrl, error } = await onUpload(formData);
     
     if (imageUrl) {
       setPreview(imageUrl);
