@@ -1,8 +1,6 @@
 'use server'
 import { createProductProps } from "@/types";
 
-import { formSchema } from "../validation";
-
 import { revalidatePath } from "next/cache";
 import { parseStringify } from "../utils";
 import { createServer } from "../supabase/server";
@@ -117,7 +115,7 @@ export async function getProductById(id: string) {
 
     const userRole = await getUserByRole()
     
-    if(userRole !== 'employee' && userRole !== 'super_admin') {
+    if(userRole.role !== 'employee' && userRole.role !== 'super_admin') {
       return redirect('/')
     }
 

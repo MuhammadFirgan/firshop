@@ -13,7 +13,7 @@ import FileUpload from "./FileUpload";
 import ProductCategory from "./ProductCategory";
 import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
-import { createProduct, updateProducts } from "@/lib/action/product.action";
+import { createProduct, updateProducts, uploadImageProduct } from "@/lib/action/product.action";
 import { useRouter } from "next/navigation";
 
 
@@ -170,7 +170,11 @@ export default function Step({ dataEdit, type }: { dataEdit?: dataEditProps, typ
                 name="thumbnail"
                 render={({ field }) => (
                     <FormItem>
-                      <FileUpload value={field.value} onFieldChange={field.onChange}/>
+                      <FileUpload 
+                        value={field.value} 
+                        onFieldChange={field.onChange}
+                        onUpload={uploadImageProduct}
+                      />
                       <FormMessage className="text-sm text-red-500"/>
                     </FormItem>
                 )}
