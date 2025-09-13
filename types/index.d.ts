@@ -37,3 +37,19 @@ export interface MarketingProps {
     end_date: string
     thumbnail: string
 }
+
+export interface headerSectionProps {
+    heading: string
+    subHeading: string
+    needButton: boolean
+    labelButton?: string
+    linkButton?: string
+}
+
+export interface PromotionBannerProps {
+    discount?: number
+    tagline?: string
+    startDate?: Date
+    endDate?: Date
+    image?: string
+}
