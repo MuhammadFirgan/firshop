@@ -56,6 +56,39 @@ export async function createMarketing(data: MarketingProps) {
     }
 }
 
+export async function getLatestMarketing() {
+  try {
+    const supabase = await createServer()
+
+    const { data: marketing, error: dbError } = await supabase
+      .from('marketings')
+      .select("*")
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+
+    if(dbError) {
+      return {
+        success: false,
+        errors: {
+          database: [dbError.message],
+        },
+      };
+    }
+
+    const formattedData = {
+      ...marketing,
+      start_date: new Date(marketing?.start_date),
+      end_date: new Date(marketing?.end_date)
+    }
+
+    return parseStringify(formattedData)
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function uploadImageMarketing(formData: FormData) {
     const supabase = await createServer()
     const rawThumbnail = formData.get('thumbnail') as File;

@@ -2,9 +2,14 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import Countdown from "./Countdown";
+import { PromotionBannerProps } from "@/types";
+import { isPast } from "date-fns";
 
 
-export default function PromotionBanner() {
+export default function PromotionBanner({ discount, tagline, startDate, endDate, image}: PromotionBannerProps) {
+  if (!startDate || !endDate || isPast(endDate)) {
+    return null;
+  }
   return (
     <div className="relative w-full min-h-[600px] bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden mb-8">
       <div className="absolute inset-0">
@@ -21,20 +26,23 @@ export default function PromotionBanner() {
           <div className="text-white w-full flex flex-col gap-6 animate-fade-in-up md:pl-12">
             <div className="space-y-2">
               <span className="inline-block px-4 py-2 text-sm font-medium bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent border border-orange-500/30 rounded-full backdrop-blur-sm animate-glow">
-                ✨ Discount 30%
+                ✨ Discount {discount}%
               </span>
             </div>
             
             <h1 className="text-6xl md:text-7xl font-bold leading-tight">
-              <span className="block bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent animate-text-shimmer">
+              {/* <span className="block bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent animate-text-shimmer">
                 Elevate Your
-              </span>
+              </span> */}
               <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent animate-text-shimmer delay-200">
-                Sneakers Game
+                {tagline}
               </span>
             </h1>
             
-            <Countdown />
+            <Countdown 
+              promotionStartDate={startDate}
+              promotionEndDate={endDate}
+            />
             
             <div className="flex gap-4 animate-fade-in-up delay-500">
               <Button asChild className="group relative bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 !text-white px-8 py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 border border-orange-500/20">
@@ -55,7 +63,7 @@ export default function PromotionBanner() {
             <div className="relative group">
               <div className="relative ">
                 <Image 
-                  src="/img/shoes.png" 
+                  src={image || ''}
                   width={600} 
                   height={500} 
                   alt="Premium Sneakers" 

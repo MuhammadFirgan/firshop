@@ -45,3 +45,11 @@ export interface headerSectionProps {
     labelButton?: string
     linkButton?: string
 }
+
+export interface PromotionBannerProps {
+    discount?: number
+    tagline?: string
+    startDate?: Date
+    endDate?: Date
+    image?: string
+}
