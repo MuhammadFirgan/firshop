@@ -37,7 +37,7 @@ export default function MarketingForm() {
             }
 
             const result = await createMarketing(parsedValues)
-            console.log("result : ", result)
+        
             if (result?.success) {
                 router.push('/dashboard/marketing');
             } 

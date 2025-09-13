@@ -37,3 +37,11 @@ export interface MarketingProps {
     end_date: string
     thumbnail: string
 }
+
+export interface headerSectionProps {
+    heading: string
+    subHeading: string
+    needButton: boolean
+    labelButton?: string
+    linkButton?: string
+}
