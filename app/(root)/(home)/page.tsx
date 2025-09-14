@@ -32,7 +32,7 @@ export default function Home() {
 
             <div className="animate-fade-in-up">
               <div className="flex items-center space-x-2 mb-6">
-                {/* <Sparkles className="text-orange-600" size={24} /> */}
+                
                 <span className="text-orange-600 font-medium">Premium Gift Selection</span>
               </div>
               

@@ -16,6 +16,8 @@ export default function RenderField({ field, props }: { field: any, props: Custo
                             placeholder={props.placeholder}
                             className="transition-all duration-300 border-gray-200  focus:border-blue-400 focus:ring-blue-400/20"
                             {...field}
+                            disabled={props.disabled}
+                            value={props.value || field.value}
                            
                         />
                     </FormControl>
