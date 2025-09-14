@@ -30,3 +30,8 @@ export const marketingSchema = z.object({
   }),
   thumbnail: z.string().min(1, { message: "Please select at least one image." }),
 })
+
+export const categorySchema = z.object({
+  name: z.string().min(2, 'Name too short').max(50, 'Name too long'),
+  slug: z.string().min(2, 'Slug too short').max(50, 'Slug too long'),
+})

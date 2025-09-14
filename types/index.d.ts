@@ -53,3 +53,8 @@ export interface PromotionBannerProps {
     endDate?: Date
     image?: string
 }
+
+export interface FormCategoryProps {
+    name: string
+    slug: string
+}
