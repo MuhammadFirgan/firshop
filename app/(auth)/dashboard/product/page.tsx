@@ -24,6 +24,7 @@ import DataTableProducts from "./data-table";
 import { getAllProducts } from "@/lib/action/product.action";
 import { columns } from './columns';
 import HeaderSectionDashboard from "@/components/shared/HeaderSectionDashboard";
+import DataTable from "@/components/shared/DataTable";
 
 
 export default async function page({ searchParams }: { searchParams: { page?: string, query?: string } }) {
@@ -44,13 +45,22 @@ export default async function page({ searchParams }: { searchParams: { page?: st
         linkButton="/dashboard/product/create"
       />
        {/* @ts-ignore */}
-      <DataTableProducts 
+      {/* <DataTableProducts 
         columns={columns} 
         data={result?.products || []}
         count={result?.count || 0}
         page={page}
         pageSize={pageSize}
         query={searchQuery}
+      /> */}
+      <DataTable 
+        columns={columns} 
+        data={result?.products || []}
+        count={result?.count || 0}
+        page={page}
+        pageSize={pageSize}
+        query={searchQuery}
+        basePath="/dashboard/product"
       />
     </div>
     

@@ -28,6 +28,7 @@ export interface DataTableProps<TData, Tvalue> {
     page: number
     pageSize: number
     query: string
+    basePath: string
 }
 
 export interface MarketingProps {

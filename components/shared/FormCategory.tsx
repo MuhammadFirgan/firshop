@@ -7,13 +7,17 @@ import z from "zod"
 import { Form } from "../ui/form"
 import CustomForm, { FieldType } from "./CustomForm"
 import { Button } from "../ui/button"
-import { ScanBarcode } from "lucide-react"
-import { useEffect } from "react"
+import { Loader2, ScanBarcode } from "lucide-react"
+import { useEffect, useState } from "react"
 import { generateSlug } from "@/lib/utils"
+import { createCategory } from "@/lib/action/category.action"
+import { useRouter } from "next/navigation"
 
 
 export default function FormCategory() {
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
+    const router = useRouter()
     const form = useForm<z.infer<typeof categorySchema>>({
         resolver: zodResolver(categorySchema),
         defaultValues: {
@@ -35,7 +39,19 @@ export default function FormCategory() {
     }, [nameValue, form])
 
     async function onSubmit(values: z.infer<typeof categorySchema>) {
-
+        setIsLoading(true)
+        try {
+            const newCategory = await createCategory({...values})
+            if(newCategory?.errors) {
+                console.log(newCategory?.errors)
+            }
+            router.push('/dashboard/categories')
+            
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsLoading(false)
+        }
     }
   return (
     <div>
@@ -65,9 +81,20 @@ export default function FormCategory() {
                 </div>
                 <Button 
                     type="submit" 
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white w-full my-7 flex">
-                        <ScanBarcode className="text-white" />
-                        <span className="text-white">Save Category</span>
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white w-full my-7 flex"
+                    disabled={isLoading} // Tombol dinonaktifkan saat loading
+                >
+                    {isLoading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <span>Saving...</span>
+                        </>
+                    ) : (
+                        <>
+                            <ScanBarcode className="text-white" />
+                            <span className="text-white">Save Category</span>
+                        </>
+                    )}
                 </Button>
             </form>
         </Form>
