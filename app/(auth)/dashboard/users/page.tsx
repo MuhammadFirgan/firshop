@@ -1,7 +1,7 @@
 import { getAllUser } from "@/lib/action/auth.action"
-import DataTable from "./data-table"
 import { columns } from "./columns"
 import HeaderSectionDashboard from "@/components/shared/HeaderSectionDashboard";
+import DataTable from "@/components/shared/DataTable";
 
 export default async function page({ searchParams }: { searchParams: { page?: string, query?: string } }) {
   const page = parseInt((await searchParams).page || '1');
@@ -25,7 +25,9 @@ export default async function page({ searchParams }: { searchParams: { page?: st
         page={page} 
         pageSize={pageSize}
         query={searchQuery}
+        basePath="/dashboard/users"
       />
+      
     </div>
   )
 }
