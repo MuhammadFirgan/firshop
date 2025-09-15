@@ -8,6 +8,8 @@ import { Form } from "../ui/form"
 import CustomForm, { FieldType } from "./CustomForm"
 import { Button } from "../ui/button"
 import { ScanBarcode } from "lucide-react"
+import { useEffect } from "react"
+import { generateSlug } from "@/lib/utils"
 
 
 export default function FormCategory() {
@@ -19,6 +21,18 @@ export default function FormCategory() {
             slug: '',
         },
     })
+
+    const nameValue = form.watch('name')
+    const slugValue = form.watch('slug')
+   
+    useEffect(() => {
+        if (nameValue) {
+            const newSlug = generateSlug(nameValue); 
+            form.setValue('slug', newSlug);
+        } else {
+            form.setValue('slug', '');
+        }
+    }, [nameValue, form])
 
     async function onSubmit(values: z.infer<typeof categorySchema>) {
 
@@ -43,7 +57,8 @@ export default function FormCategory() {
                             type={FieldType.INPUT}
                             name="slug"
                             label="Slug"
-                            value="This will be generated automatically"
+                            placeholder="Slug will be generated automatically"
+                            value={slugValue}
                             disabled={true}
                         />
                     </div>
