@@ -33,3 +33,12 @@ export function formatRupiah(amount: number) {
     minimumFractionDigits: 0,
   }).format(amount)
 }
+
+export const generateSlug = (name: string) => {
+  return name
+  .toLowerCase()
+  .trim() 
+  .replace(/\s+/g, '-') 
+  .replace(/[^a-z0-9-]/g, '') 
+  .replace(/^-+|-+$/g, ''); 
+}
