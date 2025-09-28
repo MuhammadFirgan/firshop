@@ -1,16 +1,12 @@
 
-import Link from 'next/link'
-import Filter from '../Filter'
-import { BarChart3, Bell, Home, Menu, Package, Settings, ShoppingCart, Users } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
 import SidebarContent, { BarTypeProps } from './SidebarContent';
 
 
 
-export default function Sidebar({type, navigation} : BarTypeProps) {
-
+export default function Sidebar({ type, navigation = [] }: BarTypeProps) {
   return (
     <>
       
@@ -26,7 +22,9 @@ export default function Sidebar({type, navigation} : BarTypeProps) {
       </Sheet>
 
       <aside className="fixed left-0 top-0 h-screen p-6 w-[256px] z-[99999]">
-        <div className='flex-col gap-5 hidden lg:flex'>
+        <div className="flex-col gap-5 hidden lg:flex">
+
+
           <SidebarContent type={type} navigation={navigation}/>
         </div>
       </aside>

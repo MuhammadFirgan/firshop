@@ -134,7 +134,7 @@ const Navbar = ({type}: BarTypeProps) => {
                 </DropdownMenu>
 
             
-                <MobileNav />
+                <MobileNav type="other"/>
               </div>
             </div>
           </div>
