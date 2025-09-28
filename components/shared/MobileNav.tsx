@@ -4,22 +4,16 @@ import {
     SheetContent,
     SheetTrigger,
 } from "@/components/ui/sheet"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 import { Button } from "../ui/button"
-import { Heart, Menu, Package, Search, Settings, User } from "lucide-react"
+import { Heart, Menu, Package, Search, Settings, ShoppingCart, Store, User } from "lucide-react"
 import { Input } from "../ui/input"
 import BioProfile from "./BioProfile"
 import LogoutButton from "./LogoutButton"
 import Link from "next/link";
 import { BarTypeProps } from "./SidebarContent";
 import GetNavigation from "./GetNavigation";
+import Filter from "../Filter"
 
   
 export default function MobileNav({type, navigation = []}: BarTypeProps) {
@@ -44,8 +38,24 @@ export default function MobileNav({type, navigation = []}: BarTypeProps) {
               </li>
             ))}
           </ul>
+        ) : type === 'other' ? (
+          <div className="flex flex-col gap-7 md:mt-20 mx-6 mt-8">
+            <div className="flex gap-3">
+              <User className="h-5 w-5 mb-4 text-gray-500" />
+              <Link href="/profile" className="text-sm">My Profile</Link>
+            </div>
+            <div className="flex gap-3">
+              <ShoppingCart className="h-5 w-5 mb-4 text-gray-500" />
+              <Link href="/profile" className="text-sm">My Cart</Link>
+            </div>
+            <div className="flex gap-3">
+              <Store className="h-5 w-5 mb-4 text-gray-500" />
+              <Link href="/profile" className="text-sm">My Store</Link>
+            </div>
+            
+          </div>
         ) : (
-        <div className="flex flex-col px-6 space-y-6 mt-12">
+          <div className="flex flex-col px-6 space-y-6 mt-12">
   
           <div className="relative">
             <Input
@@ -55,36 +65,6 @@ export default function MobileNav({type, navigation = []}: BarTypeProps) {
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           </div>
-
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="hover:bg-red-50 hover:text-red-600 transition-all duration-200 hover:scale-105 hidden md:block">
-                  <User className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 bg-white/95 backdrop-blur-md border border-gray-200/50">
-              <DropdownMenuSeparator />
-                <DropdownMenuItem className="hover:bg-orange-50 hover:text-orange-600 transition-colors py-2">
-                  <BioProfile />
-                  <Link href="" className='flex'>
-            
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-orange-50 hover:text-orange-600 transition-colors py-2">
-                <Link href="" className='flex'>
-                  <Package className="mr-2 h-4 w-4" />
-                  <span>Orders</span>
-                </Link>
-              </DropdownMenuItem>
-              
-              <DropdownMenuSeparator />
-              <LogoutButton />
-                <DropdownMenuItem >
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
           <div className="pt-6 border-t border-gray-200">
             <BioProfile type="mobile" />
             <div className="space-y-2">
@@ -100,7 +80,8 @@ export default function MobileNav({type, navigation = []}: BarTypeProps) {
             </div>
           </div>
         </div>
-        )}
+        )
+      }
       </SheetContent>
     </Sheet>
   )

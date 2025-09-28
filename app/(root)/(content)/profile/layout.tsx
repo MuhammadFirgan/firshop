@@ -10,7 +10,7 @@ export default function layout({ children } : {children: React.ReactNode}) {
       <Navbar />
       <div className="flex">
         <div className='hidden lg:block md:mt-24'>
-          <Sidebar type="content"/>
+          <Sidebar type="other"/>
         </div>
         <section className='flex min-h-screen max-md:pb-14 md:pl-72 md:mt-24'>
 
@@ -18,7 +18,6 @@ export default function layout({ children } : {children: React.ReactNode}) {
         </section>
       </div>
       <Footer />
-      
     </main>
   )
 }
