@@ -79,7 +79,14 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
 
     let productsQuery = supabase
       .from('products')
-      .select('*', { count: 'exact' })
+      .select(`
+        id,
+        name,
+        price,
+        stock,
+        thumbnail_url,
+        category:categories(name)
+      `, { count: 'exact' })
       .order('created_at', { ascending: false });
 
    
