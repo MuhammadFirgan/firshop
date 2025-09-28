@@ -7,13 +7,22 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Edit, Trash } from "lucide-react"
 import Link from "next/link"
 
-export const columns: ColumnDef<createProductProps>[] = [
+export type ProductData = {
+    id: string;
+    name: string;
+    category_name: string;
+    price: number;
+    stock: number;
+    thumbnail_url: string;
+}
+
+export const columns: ColumnDef<ProductData>[] = [
     {
         accessorKey: 'name',
         header: 'Product',
     },
     {
-        accessorKey: 'category',
+        accessorKey: 'category_name',
         header: 'Category',
     },
     {

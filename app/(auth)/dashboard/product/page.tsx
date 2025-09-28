@@ -1,26 +1,4 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { Edit, Trash } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import DataTableProducts from "./data-table";
+
 import { getAllProducts } from "@/lib/action/product.action";
 import { columns } from './columns';
 import HeaderSectionDashboard from "@/components/shared/HeaderSectionDashboard";
