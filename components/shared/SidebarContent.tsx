@@ -5,11 +5,18 @@ import Link from "next/link";
 import { NavigationItem } from "./GetNavigation";
 import React from "react";
 import { ShoppingCart, Store, User } from "lucide-react";
+import dynamic from "next/dynamic";
 
 export type BarTypeProps = {
     type?: 'dashboard' | 'content' | 'other';
     navigation?: NavigationItem[];
 };
+
+const DynamicFilter = dynamic(() => import("../Filter"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+})
+
 
 export default function SidebarContent({ type, navigation = [] }: BarTypeProps) {
   return (
@@ -47,7 +54,7 @@ export default function SidebarContent({ type, navigation = [] }: BarTypeProps) 
         </ul>
       </aside>
     ) : type === 'content' ? (
-      <Filter />
+      <DynamicFilter />
     ) : type === 'other' ? (
       <div className="flex flex-col gap-7 md:mt-20">
         <div className="flex gap-3">

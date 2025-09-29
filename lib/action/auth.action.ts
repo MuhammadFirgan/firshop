@@ -144,3 +144,25 @@ export async function updateUserRole(profileId: string, newRole: string) {
   return parseStringify(updateRole)
       
 }
+
+export async function getDataUser() {
+  try {
+    const supabase = await createServer();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return null;
+    }
+
+
+    return parseStringify({
+      email: user.email,
+      avatar: user.user_metadata.avatar_url,
+      fullName: user.user_metadata.full_name
+    });
+
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    return null;
+  }
+}

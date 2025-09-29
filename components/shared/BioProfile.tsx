@@ -6,6 +6,7 @@ import { Skeleton } from "../ui/skeleton"
 
 type BioProfileProps = {
     type?: "mobile" | "desktop"
+    withName?: boolean
 }
 
 export default function BioProfile({ type = "desktop" }: BioProfileProps) {
