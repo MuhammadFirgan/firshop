@@ -12,13 +12,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import MobileNav from './MobileNav';
-import BioProfile from './BioProfile';
 import Link from 'next/link';
 
 import InputSearch from './InputSearch';
 import { BarTypeProps } from './SidebarContent';
 import LogoutButton from './LogoutButton';
+import dynamic from 'next/dynamic';
 
 
 const Navbar = ({type}: BarTypeProps) => {
@@ -36,6 +35,10 @@ const Navbar = ({type}: BarTypeProps) => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const DynamicMobileNav = dynamic(() => import('./MobileNav'), {
+    ssr: false
+  })
 
 
   return (
@@ -63,7 +66,8 @@ const Navbar = ({type}: BarTypeProps) => {
               <Settings className="w-5 h-5" />
             </Button>
           </div>
-          <MobileNav type='dashboard'/>
+          {/* <MobileNav type='dashboard'/> */}
+          <DynamicMobileNav type='dashboard'/>
         </header>
       ) : (
 
@@ -133,8 +137,8 @@ const Navbar = ({type}: BarTypeProps) => {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-            
-                <MobileNav type="other"/>
+                <DynamicMobileNav type="other"/>
+                {/* <MobileNav type="other"/> */}
               </div>
             </div>
           </div>

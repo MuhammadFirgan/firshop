@@ -1,10 +1,20 @@
-import Metrics from '@/components/shared/Metrics';
-import RecentOrder from '@/components/shared/RecentOrder';
-import TopProducts from '@/components/shared/TopProducts';
+
+import dynamic from 'next/dynamic';
 
 export default function page() {
 
-    
+    const DynamicMetrics = dynamic(() => import('@/components/shared/Metrics'), {
+      ssr: false
+    })
+
+    const DynamicOrder = dynamic(() => import('@/components/shared/RecentOrder'), {
+      ssr: false
+    })
+
+    const DynamicProduct = dynamic(() => import('@/components/shared/TopProducts'), {
+      ssr: false
+    })
+
   return (
     <div className="p-6 space-y-6 bg-gradient-to-br from-slate-50 via-white to-blue-50 mt-[600px] md:mt-80">
 
@@ -16,18 +26,16 @@ export default function page() {
         
       </div>
 
-      
-      <Metrics />
-
+      <DynamicMetrics />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Orders */}
-        <RecentOrder />
+        <DynamicOrder />
 
         {/* Top Products */}
         <div className="glass-card p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-slate-800 mb-6">Top Products</h2>
-          <TopProducts />
+          <DynamicProduct />
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 import DataTable from '@/components/shared/DataTable'
-import FormCategory from '@/components/shared/FormCategory'
 import HeaderSectionDashboard from '@/components/shared/HeaderSectionDashboard'
 import { getCategories } from '@/lib/action/category.action'
 import { column } from './columns'
+import dynamic from 'next/dynamic'
 
 
 export default async function page({ searchParams }: { searchParams: { page?: string, query?: string } }) {
@@ -12,7 +12,11 @@ export default async function page({ searchParams }: { searchParams: { page?: st
   const searchQuery = (await searchParams).query || ''
 
   const result = await getCategories(page, pageSize, searchQuery)
-  console.log('result', result)
+
+  const DynamicFormCategory = dynamic(() => import('@/components/shared/FormCategory'), {
+    ssr: false
+  })
+
 
   return (
     <div className='p-7 h-screen md:pl-20 md:pr-16 -mt-24'>
@@ -21,7 +25,7 @@ export default async function page({ searchParams }: { searchParams: { page?: st
             subHeading="Manage your products and inventory"
             needButton={false}
         />
-        <FormCategory />
+        <DynamicFormCategory />
 
         <DataTable 
           columns={column}
