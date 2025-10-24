@@ -13,7 +13,6 @@ export interface createProductProps {
     }
 }
 
-
 export type users = {
     id: string
     fullName: string | null
@@ -58,4 +57,12 @@ export interface PromotionBannerProps {
 export interface FormCategoryProps {
     name: string
     slug: string
+}
+
+export interface storeProps {
+    name: string
+    description: string
+    address: string
+    profile?: string
+    banner?: string
 }
