@@ -23,14 +23,12 @@ export async function createProduct({ products }: createProductProps) {
       return redirect('/login');
     }
     
-    // 2. Dapatkan peran pengguna dari tabel profiles
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single();
 
-    // 3. Verifikasi peran
     if (profile?.role !== 'employee' && profile?.role !== 'super_admin') {
       return redirect('/');
     }
@@ -203,7 +201,7 @@ export async function uploadImageProduct(formData: FormData) {
   const filePath = `products/${fileName}`
   
 
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('thumbnails')
     .upload(filePath, rawThumbnail, {
       cacheControl: '3600',

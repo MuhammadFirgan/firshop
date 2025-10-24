@@ -13,9 +13,7 @@ export default async function page({ searchParams }: { searchParams: { page?: st
 
   const result = await getCategories(page, pageSize, searchQuery)
 
-  const DynamicFormCategory = dynamic(() => import('@/components/shared/FormCategory'), {
-    ssr: false
-  })
+  const DynamicFormCategory = dynamic(() => import('@/components/shared/FormCategory'))
 
 
   return (

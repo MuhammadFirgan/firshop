@@ -13,7 +13,6 @@ export type BarTypeProps = {
 };
 
 const DynamicFilter = dynamic(() => import("../Filter"), {
-  ssr: false,
   loading: () => <p>Loading...</p>,
 })
 

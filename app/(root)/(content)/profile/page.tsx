@@ -19,7 +19,7 @@ export default async function page() {
           </div>
         
           <div className="flex flex-col justify-start gap-4">
-            <h1 className="text-2xl lg:text-4xl font-bold text-gray-900 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent pb-3">
+            <h1 className="text-2xl lg:text-4xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent pb-3">
               {resultUser.fullName}
             </h1>
           
@@ -29,6 +29,11 @@ export default async function page() {
               </div>
               <div>
                 <p className="text-sm text-gray-600 font-medium">Store Name</p>
+                <span 
+                  className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors duration-200"
+                >
+                  -
+                </span>
               </div>
             </div>
           

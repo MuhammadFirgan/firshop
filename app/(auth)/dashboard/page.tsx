@@ -3,17 +3,11 @@ import dynamic from 'next/dynamic';
 
 export default function page() {
 
-    const DynamicMetrics = dynamic(() => import('@/components/shared/Metrics'), {
-      ssr: false
-    })
+    const DynamicMetrics = dynamic(() => import('@/components/shared/Metrics'))
 
-    const DynamicOrder = dynamic(() => import('@/components/shared/RecentOrder'), {
-      ssr: false
-    })
+    const DynamicOrder = dynamic(() => import('@/components/shared/RecentOrder'))
 
-    const DynamicProduct = dynamic(() => import('@/components/shared/TopProducts'), {
-      ssr: false
-    })
+    const DynamicProduct = dynamic(() => import('@/components/shared/TopProducts'))
 
   return (
     <div className="p-6 space-y-6 bg-gradient-to-br from-slate-50 via-white to-blue-50 mt-[600px] md:mt-80">

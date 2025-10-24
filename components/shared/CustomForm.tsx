@@ -1,6 +1,6 @@
-import { Control } from "react-hook-form"
-import { FormField, FormItem } from "../ui/form"
+import { Control, Controller } from "react-hook-form"
 import RenderField from "./RenderField"
+import { Field } from "../ui/field"
 
 export enum FieldType {
     INPUT = 'input',
@@ -12,6 +12,7 @@ export enum FieldType {
 }
 
 export interface CustomFormProps {
+    id: string
     control: Control<any>
     type: FieldType
     name: string
@@ -26,14 +27,16 @@ export interface CustomFormProps {
 export default function CustomForm(props: CustomFormProps) {
     const { name, control, value } = props
   return (
-    <FormField
+    <Controller
         control={control}
         name={name}
-        render={({ field }) => (
-        <FormItem>
+        render={({ field, fieldState }) => (
+        <Field data-invalid={fieldState.invalid}>
+
             
-            <RenderField field={field} props={props}/>
-        </FormItem>
+            <RenderField field={field} fieldState={fieldState} props={props}/>
+            
+        </Field>
         )}
     />
   )

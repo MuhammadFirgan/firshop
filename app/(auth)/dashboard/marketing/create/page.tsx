@@ -3,9 +3,7 @@ import dynamic from "next/dynamic";
 
 export default function page() {
 
-  const DynamicMarketingForm = dynamic(() => import('@/components/shared/MarketingForm'), {
-    ssr: false
-  })
+  const DynamicMarketingForm = dynamic(() => import('@/components/shared/MarketingForm'))
 
   return (
     <section className="p-7 h-screen md:pl-20 md:pr-16 mt-24 md:-mt-48 ">
