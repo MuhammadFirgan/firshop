@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { poppins } from "@/constans";
+import { Toaster } from "@/components/ui/sonner";
 
 
 
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.className}`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

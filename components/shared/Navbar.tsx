@@ -36,7 +36,7 @@ const Navbar = ({type}: BarTypeProps) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const DynamicMobileNav = dynamic(() => import('./MobileNav'))
+  const DynamicMobileNav = dynamic(() => import('./MobileNav'), { ssr: false })
 
 
   return (
