@@ -35,13 +35,13 @@ export default function page() {
   async function onSubmit(data: z.infer<typeof storeSchema>) {
     try {
       const newStore = await createStore(data)
-      console.log(newStore)
 
       if(newStore?.error) {
-        toast(newStore?.error || 'Failed to create store')
-        console.error("Error creating store:", newStore.error)
-        return
+        toast.error('Failed to create store')
       }
+
+      toast.success('Store created successfully')
+      router.push('/store')
    
 
       // if(newStore) router.push('/my-store')

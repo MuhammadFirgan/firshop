@@ -29,7 +29,7 @@ export async function createStore(dataStore: storeProps) {
                 address: dataStore.address,
                 slug: generateSlug(dataStore.name),
                 poster: dataStore.profile,
-                banne: dataStore.banner,
+                banner: dataStore.banner,
                 user_id: user.id
             })
             .select()

@@ -8,7 +8,7 @@ import z from "zod";
 import { formSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import CustomForm, { FieldType } from "./CustomForm";
+import CustomForm, { FieldType } from "./CustomForm_";
 import FileUpload from "./FileUpload";
 import ProductCategory from "./ProductCategory";
 import { Toaster } from "../ui/sonner";
