@@ -33,7 +33,7 @@ export const marketingSchema = z.object({
 
 export const storeSchema = z.object({
   name: z.string().min(2, 'Name too short').max(50, 'Name too long'),
-  description: z.string().min(2, 'Description too short').max(200, 'Description too long'),
+  description: z.string().min(2, 'Description too short'),
   address: z.string().min(2, 'Address too short').max(100, 'Address too long'),
   profile: z.string().min(1, { message: "Please select at least one image." }),
   banner: z.string().min(1, { message: "Please select at least one image." })

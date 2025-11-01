@@ -9,7 +9,7 @@ import { baseUploadHandler, UploadResult } from "./upload.action"
 
 
 export async function createStore(dataStore: storeProps) {
-    console.log("data store : ", dataStore)
+    console.log(generateSlug(dataStore.name))
     try {
         const supabase = await createServer()
 
@@ -29,7 +29,7 @@ export async function createStore(dataStore: storeProps) {
                 address: dataStore.address,
                 slug: generateSlug(dataStore.name),
                 poster: dataStore.profile,
-                thumbnail: dataStore.banner,
+                banne: dataStore.banner,
                 user_id: user.id
             })
             .select()
@@ -38,14 +38,24 @@ export async function createStore(dataStore: storeProps) {
         if (errorStore) {
             return {
         
-                errors: {
-                database: [errorStore?.message],
-                },
+                    error: errorStore.message,
                 
             };
         }
 
+        const { error: roleUpdateError } = await supabase
+            .from('profiles')
+            .update({ role: 'seller' })
+            .eq('id', user.id)
+            
+        if (roleUpdateError) {
+            return { error: roleUpdateError.message }
+             
+        }
+        
+
         revalidatePath('/mystore')
+        revalidatePath('/'); 
 
         return parseStringify(store);
         
