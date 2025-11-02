@@ -1,6 +1,6 @@
 import Footer from "@/components/shared/Footer";
 import Navbar from "@/components/shared/Navbar";
-
+import Sidebar from "@/components/shared/Sidebar";
 
 
 export default function layout({ children } : {children: React.ReactNode}) {
@@ -8,8 +8,10 @@ export default function layout({ children } : {children: React.ReactNode}) {
     <main className="relative">
       <Navbar />
       <div className="flex">
-        
-        <section className='flex w-full min-h-screen max-md:pb-14 md:mt-24'>
+        <div className='hidden lg:block md:mt-24'>
+          <Sidebar type="other"/>
+        </div>
+        <section className='flex w-full min-h-screen max-md:pb-14 md:pl-72 md:mt-24'>
 
           {children}
         </section>

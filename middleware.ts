@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
 
   if (isCreatingStore && userRole === 'seller') {
       
-      return NextResponse.redirect(new URL('/mystore', request.url)); 
+      return NextResponse.redirect(new URL('/store', request.url)); 
   }
 
   if(pathname.startsWith('/dashboard/')) {
