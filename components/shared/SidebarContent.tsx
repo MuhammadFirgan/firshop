@@ -60,11 +60,11 @@ export default function SidebarContent({ type, navigation = [] }: BarTypeProps) 
         </div>
         <div className="flex gap-3">
           <ShoppingCart className="h-5 w-5 mb-4 text-gray-500" />
-          <Link href="/profile" className="text-sm">My Cart</Link>
+          <Link href="/cart" className="text-sm">My Cart</Link>
         </div>
         <div className="flex gap-3">
           <Store className="h-5 w-5 mb-4 text-gray-500" />
-          <Link href="/profile" className="text-sm">My Store</Link>
+          <Link href="/store" className="text-sm">My Store</Link>
         </div>
         
       </div>

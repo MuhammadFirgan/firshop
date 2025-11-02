@@ -8,8 +8,15 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
+  const userRole = await getUserByRole()
+  const isCreatingStore = pathname === '/store/create'; 
+
+  if (isCreatingStore && userRole === 'seller') {
+      
+      return NextResponse.redirect(new URL('/store', request.url)); 
+  }
+
   if(pathname.startsWith('/dashboard/')) {
-    const userRole = await getUserByRole()
 
     if(userRole === null) {
       return NextResponse.redirect(new URL('/login', request.url))
@@ -30,6 +37,8 @@ export async function middleware(request: NextRequest) {
 
   return response
 }
+
+
 
 export const config = {
   matcher: [

@@ -19,7 +19,7 @@ export async function createStore(dataStore: storeProps) {
 
         if(!user) return redirect('/login')
 
-        if(userRole === 'seller') return redirect('/mystore')
+        if(userRole === 'seller') return redirect('/store')
 
         const { data: store, error: errorStore } = await supabase
             .from('stores')
@@ -59,6 +59,31 @@ export async function createStore(dataStore: storeProps) {
 
         return parseStringify(store);
         
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export async function getOwnStore() {
+    try {
+        const supabase = await createServer()
+
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if(!user) return redirect('/login')
+
+        const { data: store, error: storeError } = await supabase
+            .from('stores')
+            .select('*')
+            .eq('user_id', user.id)
+            .single()
+
+            if(storeError) {
+                return { error: 'Failed to fetch store' }
+            }
+
+        return parseStringify(store)
+
     } catch (error) {
         console.error(error)
     }
