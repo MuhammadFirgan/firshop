@@ -121,12 +121,7 @@ const Navbar = ({type}: BarTypeProps) => {
                           <span>Profile</span>
                         </Link>
                       </DropdownMenuItem>
-                    <DropdownMenuItem className="hover:bg-orange-50 hover:text-orange-600 transition-colors py-2">
-                      <Link href="" className='flex'>
-                        <ShoppingCart className="mr-2 h-4 w-4" />
-                        <span>Cart</span>
-                      </Link>
-                    </DropdownMenuItem>
+                    
                     <DropdownMenuItem className="hover:bg-orange-50 hover:text-orange-600 transition-colors py-2">
                       <Link href="" className='flex'>
                         <Store className="mr-2 h-4 w-4" />
