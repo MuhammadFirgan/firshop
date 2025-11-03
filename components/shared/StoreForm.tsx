@@ -13,20 +13,24 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 
+interface StoreFormProps {
+  mode: 'create' | 'edit';
+  initialData?: z.infer<typeof storeSchema> & { slug: string }; 
+}
 
 
-export default function page() {
+export default function page({ mode, initialData }: StoreFormProps) {
 
   const router = useRouter()
   
   const form = useForm<z.infer<typeof storeSchema>>({
     resolver: zodResolver(storeSchema),
     defaultValues: {
-      name: '',
-      description: '',
-      address: '',
-      profile: '',
-      banner: ''
+      name: initialData?.name || '',
+      description: initialData?.description || '',
+      address: initialData?.address || '',
+      profile: initialData?.profile || '',
+      banner: initialData?.banner || ''
     }
   })
 
@@ -34,19 +38,27 @@ export default function page() {
 
   async function onSubmit(data: z.infer<typeof storeSchema>) {
     try {
-      const newStore = await createStore(data)
+      let result 
 
-      if(newStore?.error) {
+      if(mode === "create") {
+        const newStore = await createStore(data)
+      } 
+      if(mode === "edit") {
+        if(!initialData?.slug) {
+          toast.error('Failed to update store')
+          router.push('/store')
+        }
+          // result = await updateStore(initialData.id, data)
+      }
+      if(result && 'error' in result) {
         toast.error('Failed to create store')
       }
 
-      toast.success('Store created successfully')
+      toast.success(`Store successfully ${mode === 'create' ? 'created' : 'updated'}!`)
       router.push('/store')
    
-
-      // if(newStore) router.push('/my-store')
     } catch (error) {
-      // toast(error?.errors?.database[0] || 'Failed to create store')
+      toast.success(`Error to ${mode === 'create' ? 'created' : 'updated'} store!`)
       console.error("Error creating store:", error)
     }
   }
@@ -64,7 +76,7 @@ export default function page() {
                 <FormUpload control={form.control} name="banner" label="Banner" onUpload={uploadBannerStore}/>
             </div>
             <Button type="submit" className='bg-gradient' disabled={isLoading}>
-              {isLoading ? 'Processing...' : 'Create Store'}
+              {isLoading ? 'Processing...' : 'Save Store'}
             </Button>
         </FieldGroup>
     </form>

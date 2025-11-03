@@ -1,14 +1,14 @@
 'use server'
 
 import { redirect } from "next/navigation"
-import { parseStringify } from "../utils"
+import { parseStringify, supabase } from "../utils"
 import { createServer } from "../supabase/server"
 import { revalidatePath } from "next/cache"
 
 
 
 export async function loginWithOAuth() {
-    const supabase = await createServer()
+    
     
     const user = await supabase.auth.getUser()
 
@@ -17,7 +17,7 @@ export async function loginWithOAuth() {
 
 
 export async function userLogout() {
-    const supabase = await createServer()
+    
 
     const logout = await supabase.auth.signOut()
 
@@ -29,7 +29,7 @@ export async function userLogout() {
 }
 
 export async function getUserByRole() {
-    const supabase = await createServer()
+    
     const { data: { user } } = await supabase.auth.getUser()
 
     if(!user) return null
@@ -45,7 +45,7 @@ export async function getUserByRole() {
 
 export async function getAllUser(page: number, pageSize: number = 10, query: string = '') {
   try {
-    const supabase = await createServer();
+    ;
     const userRole = await getUserByRole();
     if (userRole !== 'super_admin') {
       return { users: [], count: 0, error: 'Forbidden' };
@@ -102,7 +102,7 @@ export async function getAllUser(page: number, pageSize: number = 10, query: str
 }
 
 export async function updateUserRole(profileId: string, newRole: string) {
-  const supabase = await createServer()
+  
 
   const { data: { user } } = await supabase.auth.getUser()
    if(!user) {
@@ -147,7 +147,7 @@ export async function updateUserRole(profileId: string, newRole: string) {
 
 export async function getDataUser() {
   try {
-    const supabase = await createServer();
+    ;
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {

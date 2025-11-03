@@ -2,6 +2,7 @@
 
 import { createServer } from "../supabase/server";
 import { v4 as uuidv4 } from 'uuid'
+import { supabase } from "../utils";
 
 export interface UploadResult {
   imageUrl?: string;
@@ -10,7 +11,7 @@ export interface UploadResult {
 
 // Fungsi inti yang menangani logika upload
 export async function baseUploadHandler(formData: FormData, folderPath: string): Promise<UploadResult> {
-    const supabase = await createServer();
+    ;
     // Asumsi kunci field di FormData selalu 'thumbnail'
     const file = formData.get('thumbnail') as File; 
     

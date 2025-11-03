@@ -3,16 +3,15 @@ import { storeProps } from "@/types"
 import { createServer } from "../supabase/server"
 import { redirect } from "next/navigation"
 import { getUserByRole } from "./auth.action"
-import { generateSlug, parseStringify } from "../utils"
+import { generateSlug, parseStringify, supabase } from "../utils"
 import { revalidatePath } from "next/cache"
 import { baseUploadHandler, UploadResult } from "./upload.action"
 
 
 export async function createStore(dataStore: storeProps) {
-    console.log(generateSlug(dataStore.name))
+  
     try {
-        const supabase = await createServer()
-
+        
         const userRole = await getUserByRole()
 
         const { data: { user } } = await supabase.auth.getUser()
@@ -66,7 +65,7 @@ export async function createStore(dataStore: storeProps) {
 
 export async function getOwnStore() {
     try {
-        const supabase = await createServer()
+        
 
         const { data: { user } } = await supabase.auth.getUser()
 
@@ -84,6 +83,30 @@ export async function getOwnStore() {
 
         return parseStringify(store)
 
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export async function getStoreBySlug(slug: string) {
+    try {
+        
+
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if(!user) return redirect('/login')
+
+        const { data: store, error: storeError } = await supabase
+            .from('stores')
+            .select('*')
+            .eq('slug', slug) 
+            .single()
+
+            if(storeError) {
+                return { error: 'Failed to fetch store by slug' }
+            }
+
+        return parseStringify(store)
     } catch (error) {
         console.error(error)
     }

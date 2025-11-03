@@ -1,4 +1,4 @@
-import CreateStoreForm from "@/components/shared/CreateStoreForm";
+import StoreForm from "@/components/shared/StoreForm";
 import HeaderSectionDashboard from "@/components/shared/HeaderSectionDashboard";
 import dynamic from "next/dynamic";
 
@@ -12,7 +12,7 @@ export default function page() {
         <p className="text-sm text-gray-500">Create new store to become seller</p>
       </div>
     
-      <CreateStoreForm />
+      <StoreForm mode="create" />
       
       
     </section>

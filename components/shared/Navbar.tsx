@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingCart, User, Package, LogOut, Bell, Settings} from 'lucide-react';
+import { Search, ShoppingCart, User, Package, LogOut, Bell, Settings, Store, LayoutDashboard} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -121,10 +121,17 @@ const Navbar = ({type}: BarTypeProps) => {
                           <span>Profile</span>
                         </Link>
                       </DropdownMenuItem>
+                    
                     <DropdownMenuItem className="hover:bg-orange-50 hover:text-orange-600 transition-colors py-2">
                       <Link href="" className='flex'>
-                        <Package className="mr-2 h-4 w-4" />
-                        <span>Orders</span>
+                        <Store className="mr-2 h-4 w-4" />
+                        <span>Store</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="hover:bg-orange-50 hover:text-orange-600 transition-colors py-2">
+                      <Link href="" className='flex'>
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        <span>Dashboard</span>
                       </Link>
                     </DropdownMenuItem>
                     

@@ -2,7 +2,7 @@
 import { createProductProps } from "@/types";
 
 import { revalidatePath } from "next/cache";
-import { parseStringify } from "../utils";
+import { parseStringify, supabase } from "../utils";
 import { createServer } from "../supabase/server";
 import { v4 as uuidv4 } from 'uuid'
 import { redirect } from "next/navigation";
@@ -14,7 +14,7 @@ import { getUserByRole } from "./auth.action";
 export async function createProduct({ products }: createProductProps) {
  
   try {
-    const supabase = await createServer()
+    
 
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -70,7 +70,7 @@ export async function createProduct({ products }: createProductProps) {
 
 export async function getAllProducts(page: number, pageSize: number, query: string = '') {
   try {
-    const supabase = await createServer()
+    
 
     const startIndex = (page - 1) * pageSize
     const endIndex = startIndex + pageSize - 1
@@ -116,7 +116,7 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
 
 export async function getProductById(id: string) {
   try {
-    const supabase = await createServer()
+    
 
     const userRole = await getUserByRole()
     
@@ -143,7 +143,7 @@ export async function getProductById(id: string) {
 
 export async function updateProducts({ id, products }: createProductProps) {
   try {
-    const supabase = await createServer()
+    
 
     const userRole = await getUserByRole()
     
@@ -181,14 +181,14 @@ export async function updateProducts({ id, products }: createProductProps) {
 
 export async function deleteProduct(id: string) {
   try {
-    const supabase = await createServer()
+    
   } catch (error) {
     console.log(error)
   }
 }
 
 export async function uploadImageProduct(formData: FormData) {
-  const supabase = await createServer()
+  
   const rawThumbnail = formData.get('thumbnail') as File;
 
   if (!rawThumbnail) {

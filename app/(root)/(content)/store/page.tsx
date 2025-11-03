@@ -63,7 +63,7 @@ export default async function Home() {
                       <span>Open 24/7</span>
                       {isOwner && (
                         <Badge asChild>
-                          <Link href={`/store/${mystore.id}/edit`}>Edit Store</Link>
+                          <Link href={`/store/${mystore.slug}/edit`}>Edit Store</Link>
                         </Badge>
                       )}
                     </div>

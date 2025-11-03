@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sheet"
 
 import { Button } from "../ui/button"
-import { Heart, Menu, Package, Search, Settings, ShoppingCart, Store, User } from "lucide-react"
+import { Heart, LayoutDashboard, Menu, Package, Search, Settings, ShoppingCart, Store, User } from "lucide-react"
 import { Input } from "../ui/input"
 import BioProfile from "./BioProfile"
 import LogoutButton from "./LogoutButton"
@@ -44,13 +44,14 @@ export default function MobileNav({type, navigation = []}: BarTypeProps) {
               <User className="h-5 w-5 mb-4 text-gray-500" />
               <Link href="/profile" className="text-sm">My Profile</Link>
             </div>
-            <div className="flex gap-3">
-              <ShoppingCart className="h-5 w-5 mb-4 text-gray-500" />
-              <Link href="/profile" className="text-sm">My Cart</Link>
-            </div>
+            
             <div className="flex gap-3">
               <Store className="h-5 w-5 mb-4 text-gray-500" />
-              <Link href="/profile" className="text-sm">My Store</Link>
+              <Link href="/store" className="text-sm">My Store</Link>
+            </div>
+            <div className="flex gap-3">
+              <LayoutDashboard className="h-5 w-5 mb-4 text-gray-500" />
+              <Link href="/dashboard" className="text-sm">My Dashboard</Link>
             </div>
             
           </div>

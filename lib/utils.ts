@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { createServer } from "./supabase/server";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -16,3 +17,5 @@ export function generateSlug(name: string): string {
     .replace(/[^a-z0-9]+/g, "-") // Ganti karakter non-alfanumerik dengan tanda hubung
     .replace(/^-+|-+$/g, ""); // Hapus tanda hubung di awal dan akhir
 }
+
+export const supabase = await createServer();
