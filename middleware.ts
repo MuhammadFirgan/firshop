@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const userRole = await getUserByRole()
-  const isCreatingStore = pathname === '/store/create'; 
+  const isCreatingStore = pathname === '/store/new'; 
 
   if (isCreatingStore && userRole === 'seller') {
       
