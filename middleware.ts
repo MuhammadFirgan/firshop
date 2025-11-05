@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    if(userRole !== 'employee' && userRole !== "super_admin") {
+    if(userRole !== 'seller' && userRole !== "super_admin") {
       return NextResponse.redirect(new URL('/', request.url))
     }
 
