@@ -43,6 +43,7 @@ export default function page({ mode, initialData }: StoreFormProps) {
 
       if(mode === "create") {
         const newStore = await createStore(data)
+        router.push('/store')
       } 
       if(mode === "edit") {
         if(!initialData?.slug) {
