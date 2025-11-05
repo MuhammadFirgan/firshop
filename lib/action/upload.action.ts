@@ -2,21 +2,52 @@
 
 import { createServer } from "../supabase/server";
 import { v4 as uuidv4 } from 'uuid'
-import { supabase } from "../utils";
+
 
 export interface UploadResult {
   imageUrl?: string;
   error?: string;
 }
 
+export async function deleteFile( filePath: string): Promise<void> {
+    const supabase = await createServer(); // Panggil lokal
+
+    if (!filePath || typeof filePath !== 'string') {
+        console.warn('Attempted to delete a file with an invalid path:', filePath);
+        return;
+    }
+
+    const pathSegments = filePath.split('/');
+    const fileToDeletePath = pathSegments.slice(pathSegments.indexOf('thumbnails') + 1).join('/');
+
+    if (!fileToDeletePath || fileToDeletePath === '') {
+        console.warn('Could not extract file path from URL for deletion:', filePath);
+        return;
+    }
+
+    const { error } = await supabase.storage
+        .from('thumbnails')
+        .remove([fileToDeletePath]);
+
+    if (error) {
+        console.error(`Error deleting file ${fileToDeletePath}`);
+        
+    } else {
+        console.log(`Successfully deleted file: ${fileToDeletePath}`);
+    }
+}
+
 // Fungsi inti yang menangani logika upload
-export async function baseUploadHandler(formData: FormData, folderPath: string): Promise<UploadResult> {
-    ;
-    // Asumsi kunci field di FormData selalu 'thumbnail'
+export async function baseUploadHandler(formData: FormData, folderPath: string, oldFilePath?: string): Promise<UploadResult> {
+    const supabase = await createServer()
+  
     const file = formData.get('thumbnail') as File; 
     
     if (!file || file.size === 0) {
-        return { error: 'File tidak ditemukan.' };
+        if (oldFilePath) {
+            return { imageUrl: oldFilePath }; 
+        }
+        return { error: 'No file provided.' };
     }
 
     const fileExt = file.name.split('.').pop();
@@ -34,6 +65,11 @@ export async function baseUploadHandler(formData: FormData, folderPath: string):
     if (uploadError) {
         console.error(`Error uploading to ${folderPath}:`, uploadError);
         return { error: `Gagal mengunggah gambar: ${uploadError.message}` };
+    }
+
+    // Jika upload berhasil dan ada oldFilePath, hapus file lama
+    if (oldFilePath) {
+        await deleteFile(oldFilePath);
     }
 
     // Langkah 2: Dapatkan URL Publik

@@ -65,6 +65,7 @@ export default async function Home() {
                         <Badge asChild>
                           <Link href={`/store/${mystore.slug}/edit`}>Edit Store</Link>
                         </Badge>
+                        
                       )}
                     </div>
                   </div>

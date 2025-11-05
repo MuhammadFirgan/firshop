@@ -7,7 +7,7 @@ import z from 'zod'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { FormInput, FormTextarea, FormUpload } from '@/components/shared/CustomForm'
 import { Button } from '@/components/ui/button'
-import { createStore, uploadBannerStore, uploadProfileStore } from '@/lib/action/store.action'
+import { createStore, updateStore, uploadBannerStore, uploadProfileStore } from '@/lib/action/store.action'
 import useLoading from '@/hooks/useLoading'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -20,6 +20,7 @@ interface StoreFormProps {
 
 
 export default function page({ mode, initialData }: StoreFormProps) {
+
 
   const router = useRouter()
   
@@ -42,17 +43,20 @@ export default function page({ mode, initialData }: StoreFormProps) {
 
       if(mode === "create") {
         const newStore = await createStore(data)
+        router.push('/store')
       } 
       if(mode === "edit") {
         if(!initialData?.slug) {
           toast.error('Failed to update store')
           router.push('/store')
+          return
         }
-          // result = await updateStore(initialData.id, data)
+          result = await updateStore(initialData?.slug, data)
+          console.log(result)
       }
-      if(result && 'error' in result) {
-        toast.error('Failed to create store')
-      }
+      // if(result && 'error' in result) {
+      //   toast.error('Failed to create store')
+      // }
 
       toast.success(`Store successfully ${mode === 'create' ? 'created' : 'updated'}!`)
       router.push('/store')

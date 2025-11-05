@@ -2,13 +2,13 @@
 
 import { FormCategoryProps } from "@/types";
 import { createServer } from "../supabase/server";
-import { parseStringify, supabase } from "../utils";
+import { parseStringify} from "../utils";
 import { revalidatePath } from "next/cache";
 import { getUserByRole } from "./auth.action";
 
 export async function createCategory(dataCategory: FormCategoryProps) {
     try {
-        
+        const supabase = await createServer()
 
         const userRole = await getUserByRole()
         
@@ -55,7 +55,7 @@ export async function createCategory(dataCategory: FormCategoryProps) {
 export async function getCategories(page: number, pageSize: number, query: string = '') {
     try {
         
-
+        const supabase = await createServer()
         const startIndex = (page - 1) * pageSize
         const endIndex = startIndex + pageSize - 1
 

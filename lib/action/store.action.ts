@@ -2,15 +2,16 @@
 import { storeProps } from "@/types"
 import { createServer } from "../supabase/server"
 import { redirect } from "next/navigation"
-import { getUserByRole } from "./auth.action"
-import { generateSlug, parseStringify, supabase } from "../utils"
+import { generateSlug, parseStringify } from "../utils"
 import { revalidatePath } from "next/cache"
 import { baseUploadHandler, UploadResult } from "./upload.action"
+import { getUserByRole } from '@/lib/action/auth.action';
 
 
 export async function createStore(dataStore: storeProps) {
   
     try {
+        const supabase = await createServer()
         
         const userRole = await getUserByRole()
 
@@ -66,7 +67,7 @@ export async function createStore(dataStore: storeProps) {
 export async function getOwnStore() {
     try {
         
-
+        const supabase = await createServer()
         const { data: { user } } = await supabase.auth.getUser()
 
         if(!user) return redirect('/login')
@@ -90,7 +91,7 @@ export async function getOwnStore() {
 
 export async function getStoreBySlug(slug: string) {
     try {
-        
+        const supabase = await createServer()
 
         const { data: { user } } = await supabase.auth.getUser()
 
@@ -112,13 +113,71 @@ export async function getStoreBySlug(slug: string) {
     }
 }
 
-export async function uploadProfileStore(formData: FormData): Promise<UploadResult> {
-    // Memanggil fungsi inti dengan path spesifik
-    return baseUploadHandler(formData, 'store/profile');
+export async function updateStore(slug: string, dataUpdate: storeProps) {
+    try {
+        const supabase = await createServer()
+        const userRole = await getUserByRole()
+
+        if(userRole !== 'seller') return redirect('/store')
+
+            const { data: oldStore, error: oldStoreError } = await supabase
+            .from('stores')
+            .select('poster, banner') 
+            .eq('slug', slug)
+            .single();
+
+        if (oldStoreError || !oldStore) {
+            console.error("Error fetching old store data for update:", oldStoreError?.message || "Store not found.");
+            return { error: "Store not found or unauthorized." };
+        }
+
+        const oldProfileUrl = oldStore.poster;
+        const oldBannerUrl = oldStore.banner;
+        
+        const profileUploadResult = await uploadProfileStore(new FormData(), oldProfileUrl);
+        if (profileUploadResult.error) {
+            return { error: `Profile upload failed: ${profileUploadResult.error}` };
+        }
+        const newProfileUrl = profileUploadResult.imageUrl || oldProfileUrl; 
+
+
+        const bannerUploadResult = await uploadBannerStore(new FormData(), oldBannerUrl);
+        if (bannerUploadResult.error) {
+            return { error: `Banner upload failed: ${bannerUploadResult.error}` };
+        }
+        const newBannerUrl = bannerUploadResult.imageUrl || oldBannerUrl;
+
+        const { data: updateStore, error: dbError } = await supabase
+        
+            .from('stores')
+            .update({
+                name: dataUpdate.name,
+                description: dataUpdate.description,
+                address: dataUpdate.address,
+                poster: newProfileUrl,
+                banner: newBannerUrl,
+            })
+            .eq('slug', slug)
+            .select()
+            .single()
+
+        if(dbError) {
+            return { error: 'Failed to update store' }
+        }
+
+        return parseStringify(updateStore)
+    } catch (e) {
+        console.error(e)
+    }
 }
 
-export async function uploadBannerStore(formData: FormData): Promise<UploadResult> {
+export async function uploadProfileStore(formData: FormData, oldProfileUrl?: string): Promise<UploadResult> {
     // Memanggil fungsi inti dengan path spesifik
-    return baseUploadHandler(formData, 'store/banner');
+    return baseUploadHandler(formData, 'store/profile', oldProfileUrl);
+}
+
+export async function uploadBannerStore(formData: FormData, oldBannerUrl?: string): Promise<UploadResult> {
+    // Memanggil fungsi inti dengan path spesifik
+    return baseUploadHandler(formData, 'store/banner', oldBannerUrl);
 }
 

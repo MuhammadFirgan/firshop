@@ -4,12 +4,12 @@ import { MarketingProps } from "@/types";
 import { createServer } from "../supabase/server";
 import { getUserByRole } from "./auth.action";
 import { revalidatePath } from "next/cache";
-import { parseStringify, supabase } from "../utils";
+import { parseStringify } from "../utils";
 import { v4 as uuidv4 } from 'uuid'
 
 export async function createMarketing(data: MarketingProps) {
     try {
-        
+        const supabase = await createServer()
 
         const userRole = await getUserByRole()
 
@@ -58,7 +58,7 @@ export async function createMarketing(data: MarketingProps) {
 
 export async function getLatestMarketing() {
   try {
-    
+    const supabase = await createServer()
 
     const { data: marketing, error: dbError } = await supabase
       .from('marketings')
@@ -90,6 +90,7 @@ export async function getLatestMarketing() {
 }
 
 export async function uploadImageMarketing(formData: FormData) {
+  const supabase = await createServer()
     
     const rawThumbnail = formData.get('thumbnail') as File;
   

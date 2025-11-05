@@ -10,7 +10,7 @@ export default async function page({
   const {slug} = await params
 
   const resultStoreSlug = await getStoreBySlug(slug)
-  console.log(resultStoreSlug)
+
   
   return (
     <section className="min-w-full px-6">

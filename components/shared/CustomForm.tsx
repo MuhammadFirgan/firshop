@@ -22,6 +22,7 @@ import FileUpload from "./FileUpload"
     label: ReactNode
     description?: ReactNode
     control: ControllerProps<TFieldValues, TName, TTransformedValues>["control"]
+    disabled?: boolean
   }
   
   type FormBaseProps<
@@ -67,6 +68,7 @@ import FileUpload from "./FileUpload"
     description,
     controlFirst,
     horizontal,
+    disabled = false
   }: FormBaseProps<TFieldValues, TName, TTransformedValues>) {
     return (
       <Controller
@@ -83,6 +85,7 @@ import FileUpload from "./FileUpload"
             ...field,
             id: field.name,
             "aria-invalid": fieldState.invalid,
+            disabled: disabled
           })
           const errorElem = fieldState.invalid && (
             <FieldError errors={[fieldState.error]} />
@@ -91,6 +94,7 @@ import FileUpload from "./FileUpload"
           return (
             <Field
               data-invalid={fieldState.invalid}
+              data-disabled={disabled}
               orientation={horizontal ? "horizontal" : undefined}
             >
               {controlFirst ? (
@@ -129,8 +133,8 @@ import FileUpload from "./FileUpload"
   }) => {
     return (
       <FormBase {...props}>
-        {({ onChange, onBlur, ...field }) => (
-          <Select {...field} onValueChange={onChange}>
+        {({ onChange, onBlur, disabled, ...field }) => (
+          <Select {...field} onValueChange={onChange} disabled={disabled}>
             <SelectTrigger
               aria-invalid={field["aria-invalid"]}
               id={field.id}

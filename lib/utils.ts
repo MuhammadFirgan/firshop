@@ -18,4 +18,3 @@ export function generateSlug(name: string): string {
     .replace(/^-+|-+$/g, ""); // Hapus tanda hubung di awal dan akhir
 }
 
-export const supabase = await createServer();
