@@ -8,13 +8,15 @@ import FormCategory from '@/components/shared/FormCategory'
 
 export default async function page({ searchParams }: { searchParams: { page?: string, query?: string } }) {
 
-  const page = parseInt((await searchParams).page || '')
+  // const pageInt = parseInt((await searchParams).page || "1")
+  const pageParam = searchParams.page; // Tidak perlu `await` — searchParams sudah resolved
+  const pageInt = pageParam ? parseInt(pageParam, 10) : 1;
   const pageSize = 10
   const searchQuery = (await searchParams).query || ''
+  console.log(pageInt)
 
-  const result = await getCategories(page, pageSize, searchQuery)
+  const result = await getCategories(1, pageSize, searchQuery)
 
- 
 
 
   return (
@@ -24,13 +26,13 @@ export default async function page({ searchParams }: { searchParams: { page?: st
             subHeading="Manage your products and inventory"
             needButton={false}
         />
-        <FormCategory />
+        <FormCategory mode="create"/>
 
         <DataTable 
           columns={column}
           data={result?.categories || []}
           count={result?.count || 0}
-          page={page}
+          page={pageInt || 1}
           pageSize={pageSize}
           query={searchQuery}
           basePath="/dashboard/categories"

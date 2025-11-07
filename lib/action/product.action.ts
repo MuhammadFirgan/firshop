@@ -29,7 +29,7 @@ export async function createProduct({ products }: createProductProps) {
       .eq('id', user.id)
       .single();
 
-    if (profile?.role !== 'employee' && profile?.role !== 'super_admin') {
+    if (profile?.role !== 'seller' && profile?.role !== 'super_admin') {
       return redirect('/');
     }
     
@@ -120,7 +120,7 @@ export async function getProductById(id: string) {
     const supabase = await createServer()
     const userRole = await getUserByRole()
     
-    if(userRole.role !== 'employee' && userRole.role !== 'super_admin') {
+    if(userRole.role !== 'seller' && userRole.role !== 'super_admin') {
       return redirect('/')
     }
 
@@ -147,7 +147,7 @@ export async function updateProducts({ id, products }: createProductProps) {
     const supabase = await createServer()
     const userRole = await getUserByRole()
     
-    if(userRole !== 'employee' && userRole !== 'super_admin') {
+    if(userRole !== 'seller' && userRole !== 'super_admin') {
       return redirect('/')
     }
 

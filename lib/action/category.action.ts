@@ -11,8 +11,9 @@ export async function createCategory(dataCategory: FormCategoryProps) {
         const supabase = await createServer()
 
         const userRole = await getUserByRole()
+        console.log("userRole:", userRole)
         
-        if(userRole !== 'employee' && userRole !== 'super_admin') {
+        if(userRole !== 'super_admin') {
             return { error: 'Forbidden' }
         }
 
@@ -21,6 +22,7 @@ export async function createCategory(dataCategory: FormCategoryProps) {
         if(!user) {
             return { success: false, errors: { general: ['unauthorized'] } }
         }
+
 
         const { data: category, error: dbError } = await supabase
             .from('categories')
@@ -34,16 +36,11 @@ export async function createCategory(dataCategory: FormCategoryProps) {
 
         if (dbError) {
             return {
-        
-                errors: {
-                database: [dbError?.message],
-                },
-                
+                errors: dbError.message,
             };
         }
         
         revalidatePath('/dashboard/categories');
-        revalidatePath('/categories')
     
         return parseStringify(category);
 
@@ -56,43 +53,22 @@ export async function getCategories(page: number, pageSize: number, query: strin
     try {
         
         const supabase = await createServer()
-        const startIndex = (page - 1) * pageSize
-        const endIndex = startIndex + pageSize - 1
-
-        let categoryQuery = supabase
-            .from('categories')
-            .select(`
-                name,
-                slug,
-                total_products:products(count)    
-            `, { count: 'exact' })
+        const { data: getCategories, error: dbError } = await supabase.
+            from('categories')
+            .select('*', { count: 'exact' })
+            .ilike('name', `%${query}%`)
             .order('created_at', { ascending: false })
-            
-        if(query) {
-            // const cleanQuery = query.replace(/[^0-9]/g, '')
-
-            let filteredCondition = `name.ilike.%${query}%`
-
-            categoryQuery = categoryQuery.or(filteredCondition)
+            .range((page - 1) * pageSize, page * pageSize - 1)
+        if (dbError) {
+            return {
+                errors: dbError.message,
+            };
         }
 
-        const { data: categories, count, error } = await categoryQuery.range(startIndex, endIndex)
-
-        if(error) {
-            return { error: error.message }
-        }
-
-        // LIAT ERRORNYA DI GEMINI (PERBAIKAN RLS)
-
-        const formattedCategories = categories.map((cat: any) => ({
-            name: cat.name,
-            total_products: cat.total_products?.[0]?.count || 0,
-        }));
-
-        console.log('categories', categories)
-
-
-        return { categories: parseStringify(formattedCategories), count: count }
+        return {
+            categories: parseStringify(getCategories),
+            count: getCategories?.length || 0,
+        };
 
 
     } catch (error) {

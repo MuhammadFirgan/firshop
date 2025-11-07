@@ -16,16 +16,34 @@ export const column: ColumnDef<columnCategoryProps>[] = [
     },
     {
         accessorKey: 'totalProduct',
-        header: 'Total Product',
+        header: () => (
+            <div className="text-center">
+                Total Product
+            </div>
+        ),
+        cell: ({ row }) => {
+            const total = row.original.totalProduct || '0';
+            return (
+                <div className="text-center ">
+                    {total}
+                </div>
+            )
+        }
     },
     {
         accessorKey: 'action',
-        header: 'Action',
+        header: () => (
+            <div className="text-center">
+                Action
+            </div>
+        ),
         cell: () => {
             return (
-                <Button variant="ghost">
-                    <Trash className="size-4"/>
-                </Button>
+                <div className="text-center">
+                    <Button variant="ghost">
+                        <Trash className="size-4"/>
+                    </Button>
+                </div>
             )
         }
     }
