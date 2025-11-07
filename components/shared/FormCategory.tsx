@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation"
 import useLoading from "@/hooks/useLoading"
 import { FieldGroup } from "../ui/field"
 import { FormInput } from "./CustomForm"
+import { toast } from "sonner"
 
 interface MarketingFormProps {
   mode: 'create' | 'edit';
@@ -50,6 +51,14 @@ export default function FormCategory({ mode, initialData }: MarketingFormProps) 
         try {
             
             const newCategory = await createCategory({...values})
+    
+            if(newCategory.errors) {
+                toast("Failed to create new category")
+            } else {
+
+                toast.success("Category created successfully")
+            }
+
             router.push('/dashboard/categories')
             
         } catch (error) {

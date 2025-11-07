@@ -23,14 +23,7 @@ export default function DataTable<TData, TValue>({
     const [localQuery, setLocalQuery] = useState(query);
     const debouncedQuery = useDebounce(localQuery, 500);
     
-    // Sinkronkan state lokal dengan prop query
-    // useEffect(() => {
-    //     if (debouncedQuery !== query) {
-    //         router.replace(`${basePath}?page=1&query=${debouncedQuery}`);
-    //       }
-    // }, [query, localQuery]);
 
-    // Efek debounce: memantau perubahan 'debouncedQuery'
     useEffect(() => {
         if (debouncedQuery !== query) {
             router.replace(`${basePath}?page=${page}&query=${debouncedQuery}`);

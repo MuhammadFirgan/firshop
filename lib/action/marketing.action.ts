@@ -15,7 +15,7 @@ export async function createMarketing(data: MarketingProps) {
 
         
 
-        if(userRole !== 'employee' && userRole !== 'super_admin') {
+        if(userRole !== 'seller' && userRole !== 'super_admin') {
             return { error: 'Forbidden' }
         }
 

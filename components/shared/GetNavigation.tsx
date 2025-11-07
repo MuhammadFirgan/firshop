@@ -1,6 +1,6 @@
 import { BarChart3, Bell, ChartBarStacked, Home, Package, Settings, ShoppingCart, Users } from 'lucide-react';
 
-export type rolesProps = 'super_admin' | 'employee' | 'user'
+export type rolesProps = 'super_admin' | 'seller' | 'user'
 
 export type NavigationItem = {
     name: string;

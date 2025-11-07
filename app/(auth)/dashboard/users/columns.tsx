@@ -41,7 +41,7 @@ export const columns: ColumnDef<users>[] = [
                     variant: "destructive"
                 },
                 {
-                    name: "employee",
+                    name: "seller",
                     variant: "warning"
                 },
                 {
