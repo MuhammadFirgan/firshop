@@ -183,7 +183,7 @@ export async function deleteProduct(id: string) {
   try {
     const supabase = await createServer()
   } catch (error) {
-    console.log(error)
+    (error)
   }
 }
 

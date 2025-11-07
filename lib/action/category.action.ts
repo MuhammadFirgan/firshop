@@ -11,7 +11,7 @@ export async function createCategory(dataCategory: FormCategoryProps) {
         const supabase = await createServer()
 
         const userRole = await getUserByRole()
-        console.log("userRole:", userRole)
+       
         
         if(userRole !== 'super_admin') {
             return { error: 'Forbidden' }

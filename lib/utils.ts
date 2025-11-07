@@ -18,3 +18,10 @@ export function generateSlug(name: string): string {
     .replace(/^-+|-+$/g, ""); // Hapus tanda hubung di awal dan akhir
 }
 
+export function formatRupiah(amount: number): string {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  }).format(amount);
+}
+

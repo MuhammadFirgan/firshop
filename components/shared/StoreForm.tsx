@@ -52,7 +52,7 @@ export default function page({ mode, initialData }: StoreFormProps) {
           return
         }
           result = await updateStore(initialData?.slug, data)
-          console.log(result)
+   
       }
       // if(result && 'error' in result) {
       //   toast.error('Failed to create store')
