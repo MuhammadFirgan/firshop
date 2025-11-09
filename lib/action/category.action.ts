@@ -49,6 +49,25 @@ export async function createCategory(dataCategory: FormCategoryProps) {
     }
 }
 
+export async function getAllCategories() {
+    try {
+        const supabase = await createServer()
+        const { data: categories, error: dbError } = await supabase
+            .from('categories')
+            .select('*')
+        if(dbError) {
+            return {
+                errors: dbError.message
+            }
+        }
+
+        return parseStringify(categories)
+    }catch(error) {
+        console.error(error)
+     
+    }
+}
+
 export async function getCategories(page: number, pageSize: number, query: string = '') {
     try {
         
@@ -69,6 +88,43 @@ export async function getCategories(page: number, pageSize: number, query: strin
             categories: parseStringify(getCategories),
             count: getCategories?.length || 0,
         };
+
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function deleteCategory(categoryId: string) {
+    try {
+        const supabase = await createServer()
+
+        const userRole = await getUserByRole()
+       
+        
+        if(userRole !== 'super_admin') {
+            return { error: 'Forbidden' }
+        }
+
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if(!user) {
+            return { success: false, errors: { general: ['unauthorized'] } }
+        }
+
+        const { error: dbError } = await supabase
+            .from('categories')
+            .delete()
+            .eq('id', categoryId)
+
+        if (dbError) {
+            return {
+                errors: dbError.message,
+            };
+        }
+
+        revalidatePath('/dashboard/categories')
+        return { success: true, message: "Delete category success" }
 
 
     } catch (error) {
