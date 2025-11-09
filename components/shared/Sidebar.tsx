@@ -21,7 +21,7 @@ export default function Sidebar({ type, navigation = [] }: BarTypeProps) {
         </SheetContent>
       </Sheet>
 
-      <aside className="fixed left-0 top-0 h-screen p-6 w-[256px] z-[99999]">
+      <aside className="fixed left-0 top-0 h-screen p-6 w-[256px] z-10">
         <div className="flex-col gap-5 hidden lg:flex">
 
 
