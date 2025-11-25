@@ -51,7 +51,6 @@ export default function FormCategory({ mode, initialData }: MarketingFormProps) 
         try {
             
             const newCategory = await createCategory({...values})
-    
             if(newCategory.errors) {
                 toast("Failed to create new category")
             } else {
@@ -59,7 +58,7 @@ export default function FormCategory({ mode, initialData }: MarketingFormProps) 
                 toast.success("Category created successfully")
             }
 
-            router.push('/dashboard/categories')
+            router.refresh()
             
         } catch (error) {
             console.error(error)

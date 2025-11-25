@@ -22,6 +22,7 @@ export async function createCategory(dataCategory: FormCategoryProps) {
         if(!user) {
             return { success: false, errors: { general: ['unauthorized'] } }
         }
+       
 
 
         const { data: category, error: dbError } = await supabase

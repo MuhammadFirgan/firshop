@@ -2,15 +2,13 @@ import { ColumnDef } from "@tanstack/react-table"
 import page from './../app/search/[keyword]/page';
 
 export interface createProductProps {
-    id?: string
-    products: {
-        productName: string
-        category: string
-        description?: string
-        price: number
-        thumbnail: string
-        stock: number
-    }
+    productName: string
+    category: string
+    description?: string
+    price: number
+    thumbnail: string
+    stock: number
+    
 }
 
 export type users = {

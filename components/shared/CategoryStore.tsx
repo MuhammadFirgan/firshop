@@ -29,6 +29,7 @@ export default function CategoryStore<T extends FieldValues>({
       try {
         const data = await getAllCategories()
         // @ts-ignore
+
         setCategories(data)
       } catch (err) {
         setError('Failed to load categories')
