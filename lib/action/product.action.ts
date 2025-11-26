@@ -156,7 +156,7 @@ export async function updateProducts(id: string, products: createProductProps) {
     const supabase = await createServer()
     const userRole = await getUserByRole()
     
-    if(userRole !== 'seller' && userRole !== 'super_admin') {
+    if(userRole !== 'seller') {
       return redirect('/')
     }
 
@@ -211,6 +211,23 @@ export async function updateProducts(id: string, products: createProductProps) {
 export async function deleteProduct(id: string) {
   try {
     const supabase = await createServer()
+    const userRole = await getUserByRole()
+
+    if(userRole !== "seller") {
+      return redirect('/')
+    }
+
+    const { error: dbError } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id)
+
+      if(dbError) {
+        return { message: 'Failed to delete product' };
+      }
+
+      return { success: true, message: "Delete category success" }
+
   } catch (error) {
     (error)
   }

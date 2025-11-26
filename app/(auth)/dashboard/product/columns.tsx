@@ -1,6 +1,8 @@
 'use client'
 
+import { DeleteAction } from "@/components/shared/DeleteAction"
 import { Button } from "@/components/ui/button"
+import { deleteProduct } from "@/lib/action/product.action"
 import { formatUSD } from "@/lib/utils"
 import { createProductProps } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
@@ -54,9 +56,8 @@ export const columns: ColumnDef<ProductData>[] = [
                             <Edit className="size-4" />
                         </Button>
                     </Link>
-                    <Button variant="ghost">
-                        <Trash className="size-4"/>
-                    </Button>
+                    
+                    <DeleteAction  id={row.original.id as string} onDelete={deleteProduct}/>
                 </div>
             )
         },

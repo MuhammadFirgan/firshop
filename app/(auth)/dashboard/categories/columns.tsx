@@ -1,7 +1,8 @@
 'use client'
 
-import { DeleteCategory } from "@/components/shared/DeleteCategory"
+import { DeleteAction } from "@/components/shared/DeleteAction"
 import { Button } from "@/components/ui/button"
+import { deleteCategory } from "@/lib/action/category.action"
 import { ColumnDef } from "@tanstack/react-table"
 import { Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -44,7 +45,7 @@ export const column: ColumnDef<columnCategoryProps>[] = [
            
             return (
                 // @ts-ignore
-                <DeleteCategory categoryId={row.original.id as string} />
+                <DeleteCategory categoryId={row.original.id as string} onDelete={deleteCategory} />
             )
         }
     }

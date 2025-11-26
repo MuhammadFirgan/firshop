@@ -23,15 +23,16 @@ import { deleteCategory } from "@/lib/action/category.action";
 
 
 
-export function DeleteCategory(id: string) {
+export function DeleteProduct({id}: {id: string}) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
   
   const handleDelete = async () => {
     setIsDeleting(true);
     // @ts-ignore
-    const result = await deleteCategory(id.categoryId as string);
-    console.log(result)
+    const result = await deleteProduct(id);
+  
+
 
     if (result?.success) {
       toast.success(result.message);
@@ -54,7 +55,7 @@ export function DeleteCategory(id: string) {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Category</AlertDialogTitle>
+          <AlertDialogTitle>Delete Product</AlertDialogTitle>
           <AlertDialogDescription>
             Are you sure you want to delete this category? This action cannot be undone.
           </AlertDialogDescription>
