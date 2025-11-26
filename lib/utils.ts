@@ -18,3 +18,10 @@ export function generateSlug(name: string): string {
     .replace(/^-+|-+$/g, ""); // Hapus tanda hubung di awal dan akhir
 }
 
+export function formatUSD(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+}
+

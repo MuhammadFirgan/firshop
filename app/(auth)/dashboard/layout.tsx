@@ -9,7 +9,7 @@ export default async function layout({ children } : {children: React.ReactNode})
   const userRole = await getUserByRole()
 
   const navigation = GetNavigation(userRole)
-  console.log(navigation)
+
   return (
     <div className="min-h-screen w-full">
     {/* <div className="min-h-screen w-full "> */}

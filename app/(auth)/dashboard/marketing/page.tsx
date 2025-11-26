@@ -6,7 +6,7 @@ import { getLatestMarketing } from "@/lib/action/marketing.action";
 export default async function page() {
 
   const result = await getLatestMarketing()
-  console.log("result : ", result)
+
 
   return (
     <div className="p-7 h-screen md:pl-20 md:pr-16 mt-14 mb-10 md:-mt-20">

@@ -13,7 +13,7 @@ export default async function page({ searchParams }: { searchParams: { page?: st
   const pageInt = pageParam ? parseInt(pageParam, 10) : 1;
   const pageSize = 10
   const searchQuery = (await searchParams).query || ''
-  console.log(pageInt)
+
 
   const result = await getCategories(1, pageSize, searchQuery)
 

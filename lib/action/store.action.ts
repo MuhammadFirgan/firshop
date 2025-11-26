@@ -120,7 +120,7 @@ export async function updateStore(slug: string, dataUpdate: storeProps) {
 
         if(userRole !== 'seller') return redirect('/store')
 
-            const { data: oldStore, error: oldStoreError } = await supabase
+        const { data: oldStore, error: oldStoreError } = await supabase
             .from('stores')
             .select('poster, banner') 
             .eq('slug', slug)

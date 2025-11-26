@@ -7,14 +7,18 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { formSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import CustomForm, { FieldType } from "./CustomForm_";
+
 import FileUpload from "./FileUpload";
 import ProductCategory from "./ProductCategory";
 import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
 import { createProduct, updateProducts, uploadImageProduct } from "@/lib/action/product.action";
 import { useRouter } from "next/navigation";
+import useLoading from "@/hooks/useLoading";
+import { FieldGroup } from "../ui/field";
+import { FormInput, FormSelect, FormTextarea, FormUpload } from "./CustomForm";
+import { SelectItem } from "../ui/select";
+import CategoryStore from "./CategoryStore";
 
 
 
@@ -55,6 +59,8 @@ export default function Step({ dataEdit, type }: { dataEdit?: dataEditProps, typ
     defaultValues: defaultFormValues,
   })
 
+  const { isLoading, handleLoading } = useLoading(form.handleSubmit)
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const parsedValues = {
       ...values,
@@ -66,12 +72,16 @@ export default function Step({ dataEdit, type }: { dataEdit?: dataEditProps, typ
 
       try {
 
-        const newProduct = await createProduct({ products: parsedValues });
-        if(newProduct) {
-          router.push('/dashboard/product')
+        const newProduct = await createProduct(parsedValues);
+       
+        
+        if(newProduct.errors) {
+            toast("Failed to create new category")
+        } else {
+
+            toast.success("Category created successfully")
+            router.push('/dashboard/product')
         }
-  
-        toast("successfully created product.")
   
       } catch (error) {
         console.error(error)
@@ -103,7 +113,25 @@ export default function Step({ dataEdit, type }: { dataEdit?: dataEditProps, typ
       </div>
       
       <div className="py-8">
-        <Form {...form}>
+        <form onSubmit={handleLoading(onSubmit)}>
+          <FieldGroup>
+            <div className="flex flex-col items-center md:flex-row gap-4">
+              <FormInput control={form.control} name="productName" label="Product Name"/>
+              {/* @ts-ignore */}
+              <CategoryStore control={form.control} name="category" label="Category"/>
+            </div>
+            <FormTextarea control={form.control} name="description" label="Description"/>
+            <div className="flex flex-col items-center md:flex-row gap-4">
+              <FormInput control={form.control} name="price" label="Price" />
+              <FormInput control={form.control} name="stock" label="Stock" />
+            </div>
+            <FormUpload control={form.control} name="thumbnail" label="Thumbnail" onUpload={uploadImageProduct}/>
+            <Button type="submit" className='bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 !text-white' disabled={isLoading}>
+              {isLoading ? 'Processing...' : 'Save Store'}
+            </Button>
+          </FieldGroup>
+        </form>
+        {/* <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="flex flex-col items-center md:flex-row gap-4">
               <div className="w-full">
@@ -186,7 +214,7 @@ export default function Step({ dataEdit, type }: { dataEdit?: dataEditProps, typ
                 <span className="text-white">Save Product</span>
             </Button>
           </form>
-        </Form>
+        </Form> */}
       </div>
     </section>
   )

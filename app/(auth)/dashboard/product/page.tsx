@@ -3,6 +3,7 @@ import { getAllProducts } from "@/lib/action/product.action";
 import { columns } from './columns';
 import HeaderSectionDashboard from "@/components/shared/HeaderSectionDashboard";
 import DataTable from "@/components/shared/DataTable";
+import { getOwnStore } from "@/lib/action/store.action";
 
 
 export default async function page({ searchParams }: { searchParams: { page?: string, query?: string } }) {
@@ -12,6 +13,8 @@ export default async function page({ searchParams }: { searchParams: { page?: st
   const searchQuery = (await searchParams).query || '';
 
   const result = await getAllProducts(page, pageSize, searchQuery)
+  const mystore = await getOwnStore()
+
 
   return (
     <div className="p-7 h-screen md:pl-20 md:pr-16 -mt-24">
@@ -33,6 +36,7 @@ export default async function page({ searchParams }: { searchParams: { page?: st
       /> */}
       <DataTable 
         columns={columns} 
+        // @ts-ignore
         data={result?.products || []}
         count={result?.count || 0}
         page={page}

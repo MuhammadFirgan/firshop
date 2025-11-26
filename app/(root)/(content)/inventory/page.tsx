@@ -25,7 +25,7 @@ export default function page() {
                 >
                     <Card
                         product={product}
-                        onAddToCart={() => console.log("Add to cart clicked")}
+                        onAddToCart={() => ("Add to cart clicked")}
                     />
                 </div>
             ))}

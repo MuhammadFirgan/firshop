@@ -1,7 +1,9 @@
 'use client'
 
+import { DeleteAction } from "@/components/shared/DeleteAction"
 import { Button } from "@/components/ui/button"
-import { formatRupiah } from "@/lib/utils"
+import { deleteProduct } from "@/lib/action/product.action"
+import { formatUSD } from "@/lib/utils"
 import { createProductProps } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { Edit, Trash } from "lucide-react"
@@ -10,7 +12,9 @@ import Link from "next/link"
 export type ProductData = {
     id: string;
     name: string;
-    category_name: string;
+    category: {
+        name: string
+    };
     price: number;
     stock: number;
     thumbnail_url: string;
@@ -22,15 +26,19 @@ export const columns: ColumnDef<ProductData>[] = [
         header: 'Product',
     },
     {
-        accessorKey: 'category_name',
+        accessorKey: 'category.name',
         header: 'Category',
+        cell: ({ row }) => {
+
+            return <span>{row.original.category.name}</span>
+        }
     },
     {
         accessorKey: 'price',
         header: 'Price',
         cell: ({ row }) => {
             const price = parseFloat(row.getValue("price"))
-            return <span>{formatRupiah(price)}</span>
+            return <span>{formatUSD(price)}</span>
         }
     },
     {
@@ -48,9 +56,8 @@ export const columns: ColumnDef<ProductData>[] = [
                             <Edit className="size-4" />
                         </Button>
                     </Link>
-                    <Button variant="ghost">
-                        <Trash className="size-4"/>
-                    </Button>
+                    
+                    <DeleteAction  id={row.original.id as string} onDelete={deleteProduct}/>
                 </div>
             )
         },

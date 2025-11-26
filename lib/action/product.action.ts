@@ -7,60 +7,67 @@ import { createServer } from "../supabase/server";
 import { v4 as uuidv4 } from 'uuid'
 import { redirect } from "next/navigation";
 import { getUserByRole } from "./auth.action";
+import { getOwnStore } from "./store.action";
+import { baseUploadHandler, UploadResult } from "./upload.action";
 
 
 
 
-export async function createProduct({ products }: createProductProps) {
- 
+export async function createProduct(products: createProductProps) {
   try {
-    
+
     const supabase = await createServer()
+    const userRole = await getUserByRole()
+    
+    if(userRole !== 'seller') {
+      return { error: 'Forbidden' }
+    }
+
     const { data: { user } } = await supabase.auth.getUser();
 
  
     if (!user) {
       return redirect('/login');
     }
-    
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
 
-    if (profile?.role !== 'seller' && profile?.role !== 'super_admin') {
-      return redirect('/');
+    const mystore = await getOwnStore()
+
+    
+    if (!mystore.user_id || !mystore) {
+      return {
+        errors: "You do not have permission to add products to this store.",
+      }
     }
+
+    const dataProduct = {
+      name: products.productName,
+      description: products.description,
+      price: products.price,
+      stock: products.stock,
+      thumbnail_url: products.thumbnail,
+      category_id: products.category,
+      store_id: mystore.id,
+      user_id: user.id
+    }
+
     
   
     const {  data: product, error: dbError } = await supabase
       .from('products')
-      .insert({
-        name: products.productName,
-        category: products.category,
-        description: products.description,
-        price: products.price,
-        stock: products.stock,
-        thumbnail_url: products.thumbnail,
-        user_id: user.id
-      })
+      .insert(dataProduct)
       .select()
       .single();
 
     if (dbError) {
       return {
  
-        errors: {
-          database: [dbError?.message],
-        },
+        errors: dbError.message,
         
       };
     }
 
+    
     revalidatePath('/dashboard/products');
-    revalidatePath('/products');
-
     return parseStringify(product);
   
   } catch (error) {
@@ -116,7 +123,7 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
 
 export async function getProductById(id: string) {
   try {
-    
+    console.log("id server: ",id)
     const supabase = await createServer()
     const userRole = await getUserByRole()
     
@@ -127,12 +134,14 @@ export async function getProductById(id: string) {
     const { data: product, error } = await supabase
       .from('products')
       .select('*')
-      .eq('id', id)
+      .eq('id', "bff054b8-c2c0-4694-90fa-e9b9e3100f24")
       .single()
 
     if(error) {
       return { error: 'Failed to fetch product' }
     }
+
+    console.log("product : ", product)
 
     return parseStringify(product)
     
@@ -141,17 +150,37 @@ export async function getProductById(id: string) {
   }
 }
 
-export async function updateProducts({ id, products }: createProductProps) {
+export async function updateProducts(id: string, products: createProductProps) {
   try {
     
     const supabase = await createServer()
     const userRole = await getUserByRole()
     
-    if(userRole !== 'seller' && userRole !== 'super_admin') {
+    if(userRole !== 'seller') {
       return redirect('/')
     }
 
-    const { data: product, error } = await supabase
+    const { data: oldProduct, error: oldProductError } = await supabase
+      .from('products')
+      .select('thumbnail_url')
+      .eq('id', id)
+      .single()
+
+    if (oldProductError || !oldProduct) {
+      return { error: "Store not found or unauthorized." };
+    }
+
+    const oldProductImageUrl = oldProduct.thumbnail_url;
+
+    const productUploadResult = await uploadImageProduct(new FormData(), oldProductImageUrl);
+
+    if (productUploadResult.error) {
+      return { error: `Profile upload failed: ${productUploadResult.error}` };
+    }
+    
+    const newProfileUrl = productUploadResult.imageUrl || oldProduct;
+
+    const { data: updateProduct, error: dbError } = await supabase
       .from('products')
       .update({
         name: products.productName,
@@ -159,20 +188,20 @@ export async function updateProducts({ id, products }: createProductProps) {
         description: products.description,
         price: products.price,
         stock: products.stock,
-        thumbnail_url: products.thumbnail,
+        thumbnail_url: newProfileUrl,
       })
       .eq('id', id)
       .select()
       .single()
 
-    if(error) {
+    if(dbError) {
       return { error: 'Failed to fetch product' };
     }
 
-    revalidatePath('/dashboard/products');
-    revalidatePath('/products');
+    revalidatePath('/dashboard/product');
+    
 
-    return parseStringify(product)
+    return parseStringify(updateProduct)
     
   } catch (error) {
     console.error("Validation Error:", error);
@@ -182,40 +211,31 @@ export async function updateProducts({ id, products }: createProductProps) {
 export async function deleteProduct(id: string) {
   try {
     const supabase = await createServer()
+    const userRole = await getUserByRole()
+
+    if(userRole !== "seller") {
+      return redirect('/')
+    }
+
+    const { error: dbError } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id)
+
+      if(dbError) {
+        return { message: 'Failed to delete product' };
+      }
+
+      return { success: true, message: "Delete category success" }
+
   } catch (error) {
-    console.log(error)
+    (error)
   }
 }
 
-export async function uploadImageProduct(formData: FormData) {
-  const supabase = await createServer()
-  const rawThumbnail = formData.get('thumbnail') as File;
-
-  if (!rawThumbnail) {
-    console.error("file not provided")
-  }
 
 
-  const fileExt = rawThumbnail.name.split('.').pop();
-  const fileName = `${uuidv4()}.${fileExt}`
-  const filePath = `products/${fileName}`
-  
-
-  const { error } = await supabase.storage
-    .from('thumbnails')
-    .upload(filePath, rawThumbnail, {
-      cacheControl: '3600',
-      upsert: false,
-    })
-  
-  if(error) {
-    console.error(error)
-    return { error: 'Failed to Upload Image' }
-  }
-
-  const { data: publicUrlData } = supabase.storage
-    .from('thumbnails')
-    .getPublicUrl(filePath)
-
-  return { imageUrl: publicUrlData.publicUrl }
+export async function uploadImageProduct(formData: FormData, oldImageUrl?: string): Promise<UploadResult> {
+    // Memanggil fungsi inti dengan path spesifik
+    return baseUploadHandler(formData, 'products', oldImageUrl);
 }

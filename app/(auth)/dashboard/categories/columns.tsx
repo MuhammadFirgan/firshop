@@ -1,8 +1,12 @@
 'use client'
 
+import { DeleteAction } from "@/components/shared/DeleteAction"
 import { Button } from "@/components/ui/button"
+import { deleteCategory } from "@/lib/action/category.action"
 import { ColumnDef } from "@tanstack/react-table"
 import { Trash } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 interface columnCategoryProps {
     name: string
@@ -37,13 +41,11 @@ export const column: ColumnDef<columnCategoryProps>[] = [
                 Action
             </div>
         ),
-        cell: () => {
+        cell: ({ row }) => {
+           
             return (
-                <div className="text-center">
-                    <Button variant="ghost">
-                        <Trash className="size-4"/>
-                    </Button>
-                </div>
+                // @ts-ignore
+                <DeleteCategory categoryId={row.original.id as string} onDelete={deleteCategory} />
             )
         }
     }

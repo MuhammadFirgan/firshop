@@ -33,7 +33,7 @@ export async function deleteFile( filePath: string): Promise<void> {
         console.error(`Error deleting file ${fileToDeletePath}`);
         
     } else {
-        console.log(`Successfully deleted file: ${fileToDeletePath}`);
+        (`Successfully deleted file: ${fileToDeletePath}`);
     }
 }
 

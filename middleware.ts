@@ -1,96 +1,92 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { updateSession } from './lib/supabase/middleware' // Assumed to exist
-import { getUserByRole } from './lib/action/auth.action' // Assumed to return 'seller', 'super_admin', or null
+import { updateSession } from './lib/supabase/middleware'
+import { getUserByRole } from './lib/action/auth.action'
+
+// Helper: cek apakah role valid
+const SELLER_PATHS = [
+  '/dashboard/product',
+  '/dashboard/product/create',
+  '/dashboard/product/', // untuk /dashboard/product/[slug]/edit
+  '/dashboard/orders',
+];
+
+const SUPER_ADMIN_PATHS = [
+  '/dashboard/categories',
+  '/dashboard/marketing',
+  '/dashboard/users',
+];
+
+const ALL_DASHBOARD_PATHS = [
+  '/dashboard',
+  '/dashboard/analytics',
+  ...SELLER_PATHS,
+  ...SUPER_ADMIN_PATHS,
+];
 
 export async function middleware(request: NextRequest) {
-  // --- 1. SESSION UPDATE ---
-  // Wajib dipanggil untuk menjaga sesi Supabase tetap segar
   const response = await updateSession(request)
-  
-  // --- Setup Path and Role ---
-  // Ensure path doesn't end with a slash (except for base '/') for consistent matching
-  const pathname = request.nextUrl.pathname.replace(/\/$/, ''); 
-  
-  // Get the user's role (assumed to return 'seller', 'super_admin', or null)
-  const userRole = await getUserByRole() 
+  const { pathname } = request.nextUrl;
+  const userRole = await getUserByRole();
 
-  // --- 2. EXISTING STORE/SELLER LOGIC (Retain Original) ---
-  const isCreatingStore = pathname === '/store/new'; 
-  if (isCreatingStore && userRole === 'seller') {
-      // NOTE: Logika ini terlihat seperti memblokir seller membuat store, 
-      // tetapi dipertahankan sesuai kode asli.
-      return NextResponse.redirect(new URL('/store', request.url)); 
-  }
+  // --- Cek Umum Dashboard ---
+  const isOnDashboard = pathname.startsWith('/dashboard');
 
-  // --- 3. DASHBOARD ACCESS CONTROL ---
-  if(pathname.startsWith('/dashboard')) {
-    
-    // 3a. Authentication Check (Block unauthenticated access)
-    if (userRole === null) {
-      return NextResponse.redirect(new URL('/login', request.url));
-    }
-
-    // --- Definisi Path Berdasarkan Peran ---
-
-    // Paths requiring ONLY SUPER_ADMIN: 
-    // 3. /dashboard/categories, 4. /dashboard/marketing, 5. /dashboard/users
-    const superAdminOnlyPaths = [
-      '/dashboard/categories',
-      '/dashboard/marketing',
-      '/dashboard/users',
-    ];
-
-    // Paths requiring SELLER OR SUPER_ADMIN:
-    // 1. /dashboard, 2. /dashboard/products, 6. /dashboard/analytics, 7. /dashboard/orders
-    const sellerOrAdminPaths = [
-      '/dashboard', // Base path (match exactly)
-      '/dashboard/products',
-      '/dashboard/analytics',
-      '/dashboard/orders',
-    ];
-
-    // 3b. Role-Specific Access Checks
-
-    // CHECK A: SUPER_ADMIN ONLY (Paling Restriktif)
-    if (superAdminOnlyPaths.some(path => pathname.startsWith(path))) {
-      if (userRole !== 'super_admin') {
-        // Redirect jika mencoba mengakses path SA tetapi bukan SA
-        return NextResponse.redirect(new URL('/dashboard', request.url)); 
+  if (isOnDashboard) {
+      // Jika tidak memiliki role sama sekali (belum login atau role tidak valid)
+      if (!userRole || (userRole !== 'seller' && userRole !== 'super_admin')) {
+          // Arahkan ke halaman utama jika mencoba akses dashboard tanpa role yang sesuai
+          return NextResponse.redirect(new URL('/', request.url));
       }
-    } 
-    
-    // CHECK B: SELLER OR SUPER_ADMIN 
-    // Memeriksa path yang tersisa (termasuk base /dashboard)
-    if (sellerOrAdminPaths.some(path => pathname.startsWith(path))) {
-        // Jika peran bukan seller atau super_admin, tolak akses
-        if (userRole !== 'seller' && userRole !== 'super_admin') {
-            return NextResponse.redirect(new URL('/', request.url));
-        }
-    }
-    
-    // Jika path tidak sesuai dengan SA Only DAN bukan path yang diizinkan seller,
-    // (misalnya '/dashboard/settings' yang tidak terdaftar), 
-    // kita asumsikan akses diizinkan jika sudah melewati auth check, 
-    // atau jika Anda ingin lebih ketat, tambahkan fallback redirect di sini.
-    
-    // 3c. Final Success: Jika execution mencapai sini, user authorized.
-    return NextResponse.next();
+
+      // --- Cek Path Berdasarkan Role ---
+      
+      // Cek apakah path yang diakses adalah path seller
+      const isSellerPath = SELLER_PATHS.some(path => {
+          if (path.endsWith('/')) {
+              // Untuk path dinamis seperti /dashboard/product/[slug]/edit
+              // Cek apakah pathname diawali dengan /dashboard/product/
+              return pathname.startsWith(path);
+          }
+          return pathname === path;
+      });
+
+      // Cek apakah path yang diakses adalah path super_admin
+      const isSuperAdminPath = SUPER_ADMIN_PATHS.some(path => pathname.startsWith(path));
+
+      const isCommonDashboardPath = pathname === '/dashboard' || pathname === '/dashboard/analytics';
+      
+      // 1. Role Seller
+      if (userRole === 'seller') {
+          // Jika Seller mengakses path Super Admin, arahkan ke /dashboard
+          if (isSuperAdminPath) {
+              return NextResponse.redirect(new URL('/dashboard', request.url));
+          }
+      }
+
+      // 2. Role Super Admin
+      else if (userRole === 'super_admin') {
+          // Jika Super Admin mengakses path Seller, arahkan ke /dashboard
+          if (isSellerPath) {
+              return NextResponse.redirect(new URL('/dashboard', request.url));
+          }
+      }
+      
+      // Logika tambahan untuk path /dashboard dan /dashboard/analytics
+      if (isCommonDashboardPath) {
+           // Izinkan akses untuk kedua role
+           return NextResponse.next();
+      }
+
+      // Pastikan role yang sah (seller atau super_admin) hanya bisa mengakses
+      // path yang menjadi milik mereka. Logika di atas sudah mencakup
+      // jika role mencoba path yang salah akan diarahkan ke /dashboard.
   }
-
-  // --- 4. RETURN RESPONSE FOR NON-DASHBOARD PATHS ---
-  return response
+  
+  // Izinkan permintaan untuk rute non-dashboard (atau setelah melewati semua pengecekan)
+  return NextResponse.next();
 }
 
-
+// Konfigurasi Matcher agar middleware hanya berjalan di rute tertentu
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
-}
+  matcher: ['/dashboard/:path*', '/'], // Jalankan untuk semua rute di bawah /dashboard dan rute root (opsional)
+};

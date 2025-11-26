@@ -23,6 +23,7 @@ import FileUpload from "./FileUpload"
     description?: ReactNode
     control: ControllerProps<TFieldValues, TName, TTransformedValues>["control"]
     disabled?: boolean
+    placeholder?: string
   }
   
   type FormBaseProps<
@@ -85,7 +86,9 @@ import FileUpload from "./FileUpload"
             ...field,
             id: field.name,
             "aria-invalid": fieldState.invalid,
-            disabled: disabled
+            disabled: disabled,
+
+     
           })
           const errorElem = fieldState.invalid && (
             <FieldError errors={[fieldState.error]} />
@@ -129,6 +132,7 @@ import FileUpload from "./FileUpload"
   
   export const FormSelect: FormControlFunc<{ children: ReactNode }> = ({
     children,
+    placeholder,
     ...props
   }) => {
     return (
@@ -139,8 +143,9 @@ import FileUpload from "./FileUpload"
               aria-invalid={field["aria-invalid"]}
               id={field.id}
               onBlur={onBlur}
+              
             >
-              <SelectValue />
+              <SelectValue placeholder={placeholder}/>
             </SelectTrigger>
             <SelectContent>{children}</SelectContent>
           </Select>
