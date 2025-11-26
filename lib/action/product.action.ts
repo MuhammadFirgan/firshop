@@ -8,7 +8,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { redirect } from "next/navigation";
 import { getUserByRole } from "./auth.action";
 import { getOwnStore } from "./store.action";
-import { baseUploadHandler, UploadResult } from "./upload.action";
+import { baseUploadHandler, deleteFile, UploadResult } from "./upload.action";
+
 
 
 
@@ -123,25 +124,17 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
 
 export async function getProductById(id: string) {
   try {
-    console.log("id server: ",id)
     const supabase = await createServer()
-    const userRole = await getUserByRole()
     
-    if(userRole.role !== 'seller' && userRole.role !== 'super_admin') {
-      return redirect('/')
-    }
-
     const { data: product, error } = await supabase
       .from('products')
       .select('*')
-      .eq('id', "bff054b8-c2c0-4694-90fa-e9b9e3100f24")
+      .eq('id', id)
       .single()
 
     if(error) {
       return { error: 'Failed to fetch product' }
     }
-
-    console.log("product : ", product)
 
     return parseStringify(product)
     
@@ -150,9 +143,9 @@ export async function getProductById(id: string) {
   }
 }
 
-export async function updateProducts(id: string, products: createProductProps) {
+export async function updateProducts({id, products}: {id: string, products: createProductProps}) {
   try {
-    
+    console.log("product : ", products)
     const supabase = await createServer()
     const userRole = await getUserByRole()
     
@@ -184,7 +177,7 @@ export async function updateProducts(id: string, products: createProductProps) {
       .from('products')
       .update({
         name: products.productName,
-        category: products.category,
+        category_id: products.category,
         description: products.description,
         price: products.price,
         stock: products.stock,
@@ -194,9 +187,13 @@ export async function updateProducts(id: string, products: createProductProps) {
       .select()
       .single()
 
-    if(dbError) {
-      return { error: 'Failed to fetch product' };
-    }
+      if (dbError) {
+        return {
+   
+          errors: dbError.message,
+          
+        };
+      }
 
     revalidatePath('/dashboard/product');
     
@@ -213,9 +210,20 @@ export async function deleteProduct(id: string) {
     const supabase = await createServer()
     const userRole = await getUserByRole()
 
+    console.log(userRole)
+
     if(userRole !== "seller") {
-      return redirect('/')
+      return { error: 'Unauthorized' }; 
     }
+
+    const productById = await getProductById(id)
+
+
+    if(productById?.thumbnail_url) {
+      await deleteFile(productById.thumbnail_url);
+    }
+
+
 
     const { error: dbError } = await supabase
       .from('products')

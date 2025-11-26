@@ -76,10 +76,10 @@ export default function Step({ dataEdit, type }: { dataEdit?: dataEditProps, typ
        
         
         if(newProduct.errors) {
-            toast("Failed to create new category")
+            toast("Failed to create new product")
         } else {
 
-            toast.success("Category created successfully")
+            toast.success("product created successfully")
             router.push('/dashboard/product')
         }
   
@@ -90,15 +90,19 @@ export default function Step({ dataEdit, type }: { dataEdit?: dataEditProps, typ
     }
 
     if (type === "update") {
+      console.log("DATA EDIT : ", dataEdit?.id)
       try {
         const updateProduct = await updateProducts({
           id: dataEdit?.id!,
           products: parsedValues
         });
-        if(updateProduct) {
-          router.push('/dashboard/product')
+        console.log("updateProduct : ", updateProduct)
+        if(updateProduct.errors) {
+          toast("Failed to create new product")
+        } else {
+            toast.success("product created successfully")
+            router.push('/dashboard/product')
         }
-        toast("successfully updated product.")
       } catch (error) {
         console.error(error)
         toast("An error occurred while edit the product.")

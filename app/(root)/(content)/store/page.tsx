@@ -32,7 +32,8 @@ export default async function Home() {
             height={5000}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          {/* <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" /> */}
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
 
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
             <div className="max-w-7xl mx-auto">
@@ -50,7 +51,8 @@ export default async function Home() {
                 </div>
 
                 <div className="flex-1 text-white">
-                  <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                  {/* <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"> */}
+                  <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-linear-to-r from-white to-white/80 bg-clip-text text-transparent">
                     {mystore.name}
                   </h1>
                   <div className="flex flex-col gap-4 text-sm md:text-base text-white/80">
@@ -95,7 +97,8 @@ export default async function Home() {
                     Featured Products
                     <Badge
                       variant="secondary"
-                      className="bg-gradient-to-r from-orange-600 to-red-600 text-white border-0"
+                      // className="bg-gradient-to-r from-orange-600 to-red-600 text-white border-0"
+                      className="bg-linear-to-r from-orange-600 to-red-600 text-white border-0"
                     >
                       hhh
                     </Badge>
@@ -129,7 +132,8 @@ export default async function Home() {
               </div>
 
               <div className="text-center py-16">
-                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-600/20 to-red-600/20 flex items-center justify-center">
+                {/* <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-600/20 to-red-600/20 flex items-center justify-center"> */}
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-linear-to-br from-orange-600/20 to-red-600/20 flex items-center justify-center">
                   <Search className="h-10 w-10 text-muted-foreground" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">No products found</h3>

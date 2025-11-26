@@ -56,7 +56,7 @@ export const columns: ColumnDef<ProductData>[] = [
                             <Edit className="size-4" />
                         </Button>
                     </Link>
-                    
+                    {/* @ts-ignore */}
                     <DeleteAction  id={row.original.id as string} onDelete={deleteProduct}/>
                 </div>
             )
