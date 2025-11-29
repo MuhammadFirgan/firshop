@@ -1,6 +1,5 @@
 
 import Benefits from '@/components/Benefits';
-import { Product } from '@/components/Card';
 import Features from '@/components/Features';
 import SkeletonCard from '@/components/SkeletonCard';
 import { bebas_neue, categories, products } from '@/constans';
@@ -8,16 +7,20 @@ import Image from 'next/image';
 import { Filter, Search } from 'lucide-react'
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import ProductsGrid from '@/components/shared/ProductsGrid';
+import ProductsGrid, { Product } from '@/components/shared/ProductsGrid';
 import PromotionBanner from '@/components/shared/PromotionBanner';
 import NewArrival from '@/components/shared/NewArrival';
+import { getAllProducts } from '@/lib/action/product.action';
 
 
 interface ProductGridProps {
   onAddToCart: (product: Product) => void
 }
 
-export default function Home() {
+export default async function Home() {
+
+  const results = await getAllProducts(2, 2)
+  
 
   return (
     <section>

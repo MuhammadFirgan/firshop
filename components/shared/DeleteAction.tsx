@@ -23,14 +23,14 @@ import { deleteCategory } from "@/lib/action/category.action";
 
 
 
-export function DeleteAction({id, onDelete}: {id: string, onDelete: (id: string) => Promise<{ success: boolean; message: string }>}) {
+export function DeleteAction({slug, onDelete}: {slug: string, onDelete: (id: string) => Promise<{ success: boolean; message: string }>}) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
   
   const handleDelete = async () => {
     setIsDeleting(true);
     // @ts-ignore
-    const result = await onDelete(id);
+    const result = await onDelete(slug);
 
 
     if (result?.success) {

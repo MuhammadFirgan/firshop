@@ -2,7 +2,7 @@
 import { createProductProps } from "@/types";
 
 import { revalidatePath } from "next/cache";
-import { parseStringify } from "../utils";
+import { generateSlug, parseStringify } from "../utils";
 import { createServer } from "../supabase/server";
 import { v4 as uuidv4 } from 'uuid'
 import { redirect } from "next/navigation";
@@ -44,6 +44,7 @@ export async function createProduct(products: createProductProps) {
       name: products.productName,
       description: products.description,
       price: products.price,
+      slug: generateSlug(products.productName),
       stock: products.stock,
       thumbnail_url: products.thumbnail,
       category_id: products.category,
@@ -80,6 +81,7 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
   try {
     
     const supabase = await createServer()
+    const currentPage = page <= 0 ? 1 : page
     const startIndex = (page - 1) * pageSize
     const endIndex = startIndex + pageSize - 1
 
@@ -89,9 +91,11 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
         id,
         name,
         price,
+        slug,
         stock,
         thumbnail_url,
-        category:categories(name)
+        category_id,
+        categories!inner(name)
       `, { count: 'exact' })
       .order('created_at', { ascending: false });
 
@@ -109,10 +113,10 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
         productsQuery = productsQuery.or(filterConditions);
       }
 
-    const { data: products, count, error } = await productsQuery.range(startIndex, endIndex);
+    const { data: products, count, error: dbError } = await productsQuery.range(startIndex, endIndex);
     
-    if(error) {
-      return { error: 'Failed to fetch products' }
+    if(dbError) {
+      return { error: dbError.message }
     }
 
     return { products: parseStringify(products), count: count };
@@ -122,14 +126,14 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
   }
 }
 
-export async function getProductById(id: string) {
+export async function getProductBySlug(slug: string) {
   try {
     const supabase = await createServer()
     
     const { data: product, error } = await supabase
       .from('products')
       .select('*')
-      .eq('id', id)
+      .eq('slug', slug)
       .single()
 
     if(error) {
@@ -145,7 +149,7 @@ export async function getProductById(id: string) {
 
 export async function updateProducts({id, products}: {id: string, products: createProductProps}) {
   try {
-    console.log("product : ", products)
+   
     const supabase = await createServer()
     const userRole = await getUserByRole()
     
@@ -205,18 +209,18 @@ export async function updateProducts({id, products}: {id: string, products: crea
   }
 }
 
-export async function deleteProduct(id: string) {
+export async function deleteProduct(slug: string) {
   try {
     const supabase = await createServer()
     const userRole = await getUserByRole()
 
-    console.log(userRole)
+
 
     if(userRole !== "seller") {
       return { error: 'Unauthorized' }; 
     }
 
-    const productById = await getProductById(id)
+    const productById = await getProductBySlug(slug)
 
 
     if(productById?.thumbnail_url) {
@@ -228,7 +232,7 @@ export async function deleteProduct(id: string) {
     const { error: dbError } = await supabase
       .from('products')
       .delete()
-      .eq('id', id)
+      .eq('slug', slug)
 
       if(dbError) {
         return { message: 'Failed to delete product' };
