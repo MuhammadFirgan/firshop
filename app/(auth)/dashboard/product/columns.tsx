@@ -12,7 +12,7 @@ import Link from "next/link"
 export type ProductData = {
     id: string;
     name: string;
-    category: {
+    categories: {
         name: string
     };
     price: number;
@@ -29,8 +29,9 @@ export const columns: ColumnDef<ProductData>[] = [
         accessorKey: 'category.name',
         header: 'Category',
         cell: ({ row }) => {
+            
 
-            return <span>{row.original.category.name}</span>
+            return <span>{row.original.categories.name}</span>
         }
     },
     {
@@ -56,8 +57,8 @@ export const columns: ColumnDef<ProductData>[] = [
                             <Edit className="size-4" />
                         </Button>
                     </Link>
-                    
-                    <DeleteAction  id={row.original.id as string} onDelete={deleteProduct}/>
+                    {/* @ts-ignore */}
+                    <DeleteAction  id={row.original.slug as string} onDelete={deleteProduct}/>
                 </div>
             )
         },

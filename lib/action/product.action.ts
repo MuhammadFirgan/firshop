@@ -2,13 +2,14 @@
 import { createProductProps } from "@/types";
 
 import { revalidatePath } from "next/cache";
-import { parseStringify } from "../utils";
+import { generateSlug, parseStringify } from "../utils";
 import { createServer } from "../supabase/server";
 import { v4 as uuidv4 } from 'uuid'
 import { redirect } from "next/navigation";
 import { getUserByRole } from "./auth.action";
 import { getOwnStore } from "./store.action";
-import { baseUploadHandler, UploadResult } from "./upload.action";
+import { baseUploadHandler, deleteFile, UploadResult } from "./upload.action";
+
 
 
 
@@ -43,6 +44,7 @@ export async function createProduct(products: createProductProps) {
       name: products.productName,
       description: products.description,
       price: products.price,
+      slug: generateSlug(products.productName),
       stock: products.stock,
       thumbnail_url: products.thumbnail,
       category_id: products.category,
@@ -79,6 +81,7 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
   try {
     
     const supabase = await createServer()
+    const currentPage = page <= 0 ? 1 : page
     const startIndex = (page - 1) * pageSize
     const endIndex = startIndex + pageSize - 1
 
@@ -88,9 +91,11 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
         id,
         name,
         price,
+        slug,
         stock,
         thumbnail_url,
-        category:categories(name)
+        category_id,
+        categories!inner(name)
       `, { count: 'exact' })
       .order('created_at', { ascending: false });
 
@@ -108,10 +113,10 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
         productsQuery = productsQuery.or(filterConditions);
       }
 
-    const { data: products, count, error } = await productsQuery.range(startIndex, endIndex);
+    const { data: products, count, error: dbError } = await productsQuery.range(startIndex, endIndex);
     
-    if(error) {
-      return { error: 'Failed to fetch products' }
+    if(dbError) {
+      return { error: dbError.message }
     }
 
     return { products: parseStringify(products), count: count };
@@ -121,27 +126,19 @@ export async function getAllProducts(page: number, pageSize: number, query: stri
   }
 }
 
-export async function getProductById(id: string) {
+export async function getProductBySlug(slug: string) {
   try {
-    console.log("id server: ",id)
     const supabase = await createServer()
-    const userRole = await getUserByRole()
     
-    if(userRole.role !== 'seller' && userRole.role !== 'super_admin') {
-      return redirect('/')
-    }
-
     const { data: product, error } = await supabase
       .from('products')
       .select('*')
-      .eq('id', "bff054b8-c2c0-4694-90fa-e9b9e3100f24")
+      .eq('slug', slug)
       .single()
 
     if(error) {
       return { error: 'Failed to fetch product' }
     }
-
-    console.log("product : ", product)
 
     return parseStringify(product)
     
@@ -150,9 +147,9 @@ export async function getProductById(id: string) {
   }
 }
 
-export async function updateProducts(id: string, products: createProductProps) {
+export async function updateProducts({id, products}: {id: string, products: createProductProps}) {
   try {
-    
+   
     const supabase = await createServer()
     const userRole = await getUserByRole()
     
@@ -184,7 +181,7 @@ export async function updateProducts(id: string, products: createProductProps) {
       .from('products')
       .update({
         name: products.productName,
-        category: products.category,
+        category_id: products.category,
         description: products.description,
         price: products.price,
         stock: products.stock,
@@ -194,9 +191,13 @@ export async function updateProducts(id: string, products: createProductProps) {
       .select()
       .single()
 
-    if(dbError) {
-      return { error: 'Failed to fetch product' };
-    }
+      if (dbError) {
+        return {
+   
+          errors: dbError.message,
+          
+        };
+      }
 
     revalidatePath('/dashboard/product');
     
@@ -208,19 +209,30 @@ export async function updateProducts(id: string, products: createProductProps) {
   }
 }
 
-export async function deleteProduct(id: string) {
+export async function deleteProduct(slug: string) {
   try {
     const supabase = await createServer()
     const userRole = await getUserByRole()
 
+
+
     if(userRole !== "seller") {
-      return redirect('/')
+      return { error: 'Unauthorized' }; 
     }
+
+    const productById = await getProductBySlug(slug)
+
+
+    if(productById?.thumbnail_url) {
+      await deleteFile(productById.thumbnail_url);
+    }
+
+
 
     const { error: dbError } = await supabase
       .from('products')
       .delete()
-      .eq('id', id)
+      .eq('slug', slug)
 
       if(dbError) {
         return { message: 'Failed to delete product' };

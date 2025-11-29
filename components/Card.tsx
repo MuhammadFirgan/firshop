@@ -21,25 +21,25 @@
 
 import { ShoppingCart, Star, Heart } from 'lucide-react'
 import Image from 'next/image'
+import { Product } from './shared/ProductsGrid'
+import Link from 'next/link'
 
-export interface Product {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  image: string
+
+
+interface elemCardProps extends Product {
   rating: number
   reviews: number
-  category: string
   featured?: boolean
+  originalPrice?: number
 }
 
 interface ProductCardProps {
-  product: Product
+  product: elemCardProps
   onAddToCart: (product: Product) => void
 }
 
 const Card: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+  
   const discount = product.originalPrice 
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0
@@ -49,7 +49,7 @@ const Card: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
       {/* Product Image */}
       <div className="relative aspect-square overflow-hidden bg-gray-50">
         <Image 
-          src={product.image}
+          src={product.thumbnail_url}
           alt={product.name}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -76,13 +76,15 @@ const Card: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
       <div className="p-6">
         <div className="mb-2">
           <span className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">
-            {product.category}
+            {product.categories.name}
           </span>
         </div>
         
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1 group-hover:text-orange-600 transition-colors">
-          {product.name}
-        </h3>
+        <Link href={`/product/${product.slug}`}>
+          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1 group-hover:text-orange-600 transition-colors ">
+            {product.name}
+          </h3>
+        </Link>
         
         <div className="flex items-center space-x-1 mb-3">
           <div className="flex items-center">
